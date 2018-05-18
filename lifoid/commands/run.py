@@ -4,10 +4,7 @@ Author:   Romary Dupuis <romary@me.com>
 Copyright (C) 2017-2018 Romary Dupuis
 """
 import traceback
-from importlib import import_module
 from commis import Command, color
-from lifoid.plugin import Plugator
-import lifoid.signals as signals
 
 
 class RunCommand(Command):
@@ -40,13 +37,6 @@ class RunCommand(Command):
         try:
             from lifoid.config import settings
             from lifoid.www.app import launch_app
-            app_settings_module = import_module(
-                settings.lifoid_settings_module
-            )
-            Plugator(
-                app_settings_module.PLUGINS,
-                app_settings_module.PLUGIN_PATHS,
-                settings).get_plugins(signals.get_command)
             kwargs = {
                 'host': args.host or settings.server.host,
                 'port': args.port or settings.server.port,

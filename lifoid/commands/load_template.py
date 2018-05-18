@@ -8,8 +8,6 @@ from importlib import import_module
 from commis import Command, color
 from lifoid.views import (TemplateRepository, TemplateRecord,
                           load_templates_path)
-from lifoid.plugin import Plugator
-import lifoid.signals as signals
 
 
 def load_template(lifoid_id, path, lang):
@@ -56,10 +54,6 @@ class LoadTemplatesCommand(Command):
             app_settings_module = import_module(
                 settings.lifoid_settings_module
             )
-            Plugator(
-                app_settings_module.PLUGINS,
-                app_settings_module.PLUGIN_PATHS,
-                settings).get_plugins(signals.get_command)
         except ModuleNotFoundError:
             color.format("No settings module found. Have you initialized your project with `lifoid init` command? ", color.RED)
         path = args.path or app_settings_module.TEMPLATES_PATH

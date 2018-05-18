@@ -6,14 +6,11 @@ Copyright (C) 2017-2018 Romary Dupuis
 import traceback
 import json
 from commis import Command, color
-from importlib import import_module
 from lifoid import Lifoid
 from lifoid.message import LifoidMessage, Payload
 from lifoid.message.message_types import TEXT
 from lifoid.renderer.talk import SimpleToTalkRenderer
 from lifoid.constants import HEADER
-from lifoid.plugin import Plugator
-import lifoid.signals as signals
 
 
 class CliCommand(Command):
@@ -39,17 +36,6 @@ class CliCommand(Command):
         """
         from lifoid.config import settings
         from lifoid.www.app import app
-        try:
-            app_settings_module = import_module(
-                settings.lifoid_settings_module
-            )
-            Plugator(
-                app_settings_module.PLUGINS,
-                app_settings_module.PLUGIN_PATHS,
-                settings).get_plugins(signals.get_command)
-        except ModuleNotFoundError:
-            return color.format("No settings module found. Have you initialized your project with `lifoid init` command? ",
-                color.RED)
         with app.app_context():
             print(HEADER)
             print(color.format('* I am listening', color.GREEN))

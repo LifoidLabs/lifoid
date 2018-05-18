@@ -4,13 +4,10 @@ Author:   Romary Dupuis <romary@me.com>
 Copyright (C) 2017-2018 Romary Dupuis
 """
 import traceback
-from importlib import import_module
 import requests
 import json
 from commis import Command, color
 from lifoid.constants import HEADER
-from lifoid.plugin import Plugator
-import lifoid.signals as signals
 
 
 def send_message(url, mess, lifoid_id):
@@ -83,16 +80,6 @@ class TalkCommand(Command):
         CLI to talk to lifoid
         """
         from lifoid.config import settings
-        try:
-            app_settings_module = import_module(
-                settings.lifoid_settings_module
-            )
-            Plugator(
-                app_settings_module.PLUGINS,
-                app_settings_module.PLUGIN_PATHS,
-                settings).get_plugins(signals.get_command)
-        except ModuleNotFoundError:
-            color.format("No settings module found. Have you initialized your project with `lifoid init` command? ", color.RED)
         print(HEADER)
         print(color.format('* I am listening', color.GREEN))
         while True:

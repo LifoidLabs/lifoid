@@ -16,8 +16,6 @@ from lifoid.constants import HEADER
 from lifoid.config import settings
 from lifoid.message.repository import MessageRepository
 from lifoid.webhook.handler import Handler
-from lifoid.plugin import Plugator
-import lifoid.signals as signals
 
 sys.path.insert(0, os.getcwd())
 
@@ -157,16 +155,6 @@ class TestCommand(Command):
         CLI to test to lifoid
         """
         from lifoid.config import settings
-        try:
-            app_settings_module = import_module(
-                settings.lifoid_settings_module
-            )
-            Plugator(
-                app_settings_module.PLUGINS,
-                app_settings_module.PLUGIN_PATHS,
-                settings).get_plugins(signals.get_command)
-        except ModuleNotFoundError:
-            color.format("No settings module found. Have you initialized your project with `lifoid init` command? ", color.RED)
         print(HEADER)
         settings.async = 'no'
         ConversationsTestCase.LIFOID_ID = args.lifoid_id
