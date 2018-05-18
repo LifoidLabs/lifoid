@@ -158,6 +158,8 @@ class LifoidMessage(Message):
         """
         if parser is None:
             return None
+
+        self.logger.debug('Parse: {}'.format(self.payload.text))
         if self.translated:
             self.parsed = parser.parse(self.translated, context)
         else:
