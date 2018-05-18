@@ -9,7 +9,7 @@
 """
 Definition of the lifoid app and commands
 """
-
+from importlib import import_module
 import logging
 from commis import color
 from commis import ConsoleProgram
@@ -20,7 +20,9 @@ from lifoid.commands.test import TestCommand
 from lifoid.commands.load_static import LoadstaticCommand
 from lifoid.commands.cli import CliCommand
 from lifoid.commands.load_template import LoadTemplatesCommand
-
+from lifoid.config import settings
+from lifoid.signals import get_command
+from lifoid.plugin import Plugator
 
 log = logging.getLogger(__name__)
 
@@ -49,6 +51,18 @@ class LifoidApp(ConsoleProgram):
         utility = klass()
         for command in commands:
             utility.register(command)
+        try:
+            app_settings_module = import_module(
+                settings.lifoid_settings_module
+            )
+            command_plugins = Plugator(
+                app_settings_module.PLUGINS,
+                app_settings_module.PLUGIN_PATHS,
+                settings).get_plugins(get_command)
+            for command in command_plugins:
+                utility.register(command)
+        except ModuleNotFoundError:
+            pass
         return utility
 
 
