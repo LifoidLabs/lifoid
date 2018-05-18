@@ -3,7 +3,7 @@
 #
 # Copyright (C) 2017-2018 Romary Dupuis
 """
-Template views system based on TornadoWeb templating
+Template views system based on Jinja2
 """
 from os import walk
 from os.path import join
