@@ -19,7 +19,6 @@ from lifoid.bot.repository import BotRepository
 from lifoid.message.repository import MessageRepository
 from lifoid.plugin import Plugator
 import lifoid.signals as signals
-from lifoid.agent.repository import get_agent_conf
 
 sys.path.insert(0, os.getcwd())
 
@@ -40,7 +39,6 @@ class Lifoid(LoggingMixin):
                  plugins_path=None):
         self.lifoid_id = lifoid_id
         self.lang = lang
-        self.bot_conf = get_agent_conf(lifoid_id)
         self.app_settings_module = None
         self.router_module = None
         self.plugins = []
@@ -102,6 +100,13 @@ class Lifoid(LoggingMixin):
     @memoized
     def translator(self):
         return self.plugator.get_plugin(signals.get_translator)
+
+    @memoized
+    def bot_conf(self):
+        bot_conf_handler = self.plugator.get_plugin(signals.get_bot_conf)
+        if bot_conf_handler is not None:
+            return bot_conf_handler(self.lifoid_id)
+        return None
 
     def reply(self, message, reply_id, context_id=None):
         """Handles message and reply.
