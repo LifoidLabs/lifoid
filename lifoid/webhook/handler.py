@@ -48,7 +48,7 @@ class Handler(LoggingMixin):
     def process(self, e_type, event, async):
         """
         Checks if the event is compliant with our simple protocol and
-        returns a response or not
+        returns a response
         """
         if e_type == E_POST and 'q' in event and 'access_token' in event\
            and 'chatbot_id' in event:

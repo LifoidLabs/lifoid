@@ -4,19 +4,19 @@ Author:   Romary Dupuis <romary@me.com>
 Copyright (C) 2017-2018 Romary Dupuis
 """
 
-from .version import get_version
 import os
 import sys
 import importlib
 from flask_babel import refresh
 from flask import current_app as app
-from lifoid.renderer.stdout import StdoutRenderer
-from lifoid.config import settings
 from loggingmixin import LoggingMixin
 from awesomedecorators import memoized
+from lifoid.renderer.stdout import StdoutRenderer
+from lifoid.config import settings
 from lifoid.bot import Bot
 from lifoid.bot.repository import BotRepository
 from lifoid.message.repository import MessageRepository
+from .version import get_version
 from lifoid.plugin import Plugator
 import lifoid.signals as signals
 
