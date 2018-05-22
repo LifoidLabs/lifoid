@@ -1,0 +1,5 @@
+include *.md
+include *.txt
+include *.yml
+recursive-include lifoid *.html *.js *.css *.woff2 *.png *.po *.mo *.pot
+include *.js
