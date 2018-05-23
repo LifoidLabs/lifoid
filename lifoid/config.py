@@ -109,21 +109,10 @@ class Configuration:
         return s[:-1]
 
 
-class RedisConfiguration(Configuration):
-    """
-    Configuration for the database server
-    """
-    host = environ_setting('REDIS_HOST', 'localhost', required=False)
-    port = int(environ_setting('REDIS_PORT', 6379, required=False))
-    db = int(environ_setting('REDIS_DB', 0, required=False))
-
-
 class DynamoDBConfiguration(Configuration):
     """
     Configuration for the database server
     """
-    key = environ_setting('DYNAMODB_KEY', 'key', required=False)
-    sort_key = environ_setting('DYNAMODB_SORT_KEY', 'date', required=False)
 
 
 class ServerConfiguration(Configuration):
@@ -145,15 +134,16 @@ class LifoidConfiguration(Configuration, LoggingMixin):
     lifoid_settings_module = environ_setting('LIFOID_SETTINGS_MODULE',
                                              'agent.settings',
                                              required=False)
+    server = ServerConfiguration()
+
     # Authentication
     dev_auth = environ_setting('DEV_AUTH', 'no', required=False)
 
     # Database backends
     templates = environ_setting('TEMPLATES', 'fs', required=False)
     repository = environ_setting('REPOSITORY', 'dict', required=False)
-    redis = RedisConfiguration()
-    dynamodb = DynamoDBConfiguration()
-    server = ServerConfiguration()
+    key = environ_setting('BACKEND_KEY', 'key', required=False)
+    sort_key = environ_setting('BACKEND_SORT_KEY', 'date', required=False)
     context_prefix = environ_setting('CONTEXT_PREFIX',
                                      'lifoid-context', required=False)
     message_prefix = environ_setting('MESSAGE_PREFIX',

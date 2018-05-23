@@ -15,5 +15,5 @@ class BotRepository(Repository):
     backend = settings.repository
     prefix = settings.context_prefix
     klass = Bot
-    key = settings.dynamodb.key
-    sort_key = settings.dynamodb.sort_key
+    key = settings.key
+    sort_key = settings.sort_key

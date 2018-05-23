@@ -53,8 +53,8 @@ class TemplateRepository(Repository):
     backend = settings.repository
     prefix = settings.template_prefix
     klass = TemplateRecord
-    key = settings.dynamodb.key
-    sort_key = settings.dynamodb.sort_key
+    key = settings.key
+    sort_key = settings.sort_key
 
 
 def get_template(lifoid_id, name, lang):
