@@ -10,10 +10,10 @@ import sys
 import importlib
 from flask_babel import refresh
 from flask import current_app as app
-from lifoid.renderer.stdout import StdoutRenderer
-from lifoid.config import settings
 from loggingmixin import LoggingMixin
 from awesomedecorators import memoized
+from lifoid.renderer.stdout import StdoutRenderer
+from lifoid.config import settings
 from lifoid.bot import Bot
 from lifoid.bot.repository import BotRepository
 from lifoid.message.repository import MessageRepository
@@ -41,8 +41,9 @@ class Lifoid(LoggingMixin):
         self.lang = lang
         self.app_settings_module = None
         self.router_module = None
-        self.plugins = []
-        self.plugins_path = []
+        self.plugins = plugins
+        self.plugins_path = plugins_path
+        self.context = None
         try:
             self.app_settings_module = importlib.import_module(
                 settings.lifoid_settings_module
