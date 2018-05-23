@@ -175,10 +175,6 @@ class LifoidConfiguration(Configuration, LoggingMixin):
     unified_events = environ_setting('UNIFIED_EVENTS',
                                      'false', required=False)
 
-    # Logging
-    logfile = environ_setting('LOGGING_FILE', 'lifoid.log', required=False)
-    loglevel = environ_setting('LOGGING_LEVEL', 'INFO', required=False)
-
 
 # Load settings immediately for import
 settings = LifoidConfiguration()
