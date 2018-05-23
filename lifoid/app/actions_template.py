@@ -1,6 +1,5 @@
 from lifoid.action import action
-from lifoid.message import LifoidMessage
-from lifoid.message import Payload
+from lifoid.message import LifoidMessage, Payload
 from lifoid.message.message_types import UNKNOWN
 
 
@@ -23,5 +22,5 @@ def name(render, message, context):
 @action(lambda message, _: message.type == UNKNOWN)
 def unknown(render, message, context):
     return render([LifoidMessage(
-        'Unkwnon message type'
+        payload=Payload(text='Unkwnon message type')
     )])

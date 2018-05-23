@@ -105,13 +105,13 @@ Accordingly we find agent/actions.py with:
 ```python
 # -*- coding: utf-8 -*-
 from lifoid.action import action
-from lifoid.message import LifoidMessage
+from lifoid.message import LifoidMessage, Payload
 
 
 @action(lambda message, context: 'hello' in message.payload.text.lower())
 def hello(render, message, context):
     return render([
-      LifoidMessage('Hello')
+      LifoidMessage(payload=Payload(text='Hello'))
     ])
 ```
 
