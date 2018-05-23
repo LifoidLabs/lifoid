@@ -1,9 +1,10 @@
-from agent.actions import hello, name
-from agent.bot import Bot
+from agent.actions import hello, name, unknown
+from lifoid.bot import Bot
 
 actions = [
     hello,
-    name
+    name,
+    unknown
 ]
 
 bot_model = Bot
