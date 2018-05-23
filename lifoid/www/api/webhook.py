@@ -45,8 +45,8 @@ def index():
         else:
             return make_response('Request method not supported', 404)
         logger.debug('{} {}'.format(e_type, event))
-        async = settings.async == 'yes'
-        resp, perf = process_event(e_type, event, async)
+        asynchronous = settings.async == 'yes'
+        resp, perf = process_event(e_type, event, asynchronous)
         logger.info('Request processed in {}'.format(perf))
         if resp is not None:
             logger.debug('Http Response: {}'.format(resp))

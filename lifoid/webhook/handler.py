@@ -45,7 +45,8 @@ class Handler(LoggingMixin):
     Proposes a simplified protocol for our own IM independant
     applications.
     """
-    def process(self, e_type, event, async):
+
+    def process(self, e_type, event, asynchronous):
         """
         Checks if the event is compliant with our simple protocol and
         returns a response or not
@@ -56,7 +57,7 @@ class Handler(LoggingMixin):
             if user is None:
                 raise LifoidRequestForbiddenError()
             event['date'] = datetime.datetime.utcnow().isoformat()[:-3]
-            if async:
+            if asynchronous:
                 try:
                     from zappa.async import run
                     run(process_event, args=(event,))

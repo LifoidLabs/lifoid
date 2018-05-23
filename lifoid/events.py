@@ -11,7 +11,7 @@ import lifoid.signals as signals
 
 
 @timeit
-def process_event(e_type, event, async=True):
+def process_event(e_type, event, asynchronous=True):
     """
     Look through a list of protocol handlers to pass an event.
     """
@@ -23,7 +23,7 @@ def process_event(e_type, event, async=True):
         app_settings_module.PLUGIN_PATHS,
         settings).get_plugins(signals.get_handler)
     for handler in handlers:
-        resp = handler.process(e_type, event, async)
+        resp = handler.process(e_type, event, asynchronous)
         if resp is not None:
             return resp
     return None
