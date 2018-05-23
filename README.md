@@ -2,7 +2,7 @@
 
 **Simple and flexible bot application development framework for the IoT**
 
-(Project initialization is on-going: cleaning up of source code, making a tests suite, writing proper documentation)
+(Project initialization is on-going: cleaning up source code, making tests suite, writing proper documentation)
 
 ---
 
