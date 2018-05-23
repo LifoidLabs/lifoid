@@ -109,12 +109,6 @@ class Configuration:
         return s[:-1]
 
 
-class DynamoDBConfiguration(Configuration):
-    """
-    Configuration for the database server
-    """
-
-
 class ServerConfiguration(Configuration):
     """
     Configuration for the web server to run an admin UI.
