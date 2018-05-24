@@ -12,8 +12,4 @@ class MessageRepository(Repository):
     """
     Messages Repository
     """
-    backend = settings.repository
-    prefix = settings.message_prefix
     klass = Message
-    key = settings.key
-    sort_key = settings.sort_key

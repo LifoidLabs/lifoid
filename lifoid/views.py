@@ -50,18 +50,15 @@ class TemplateRepository(Repository):
     """
     Messages Repository
     """
-    backend = settings.repository
-    prefix = settings.template_prefix
     klass = TemplateRecord
-    key = settings.key
-    sort_key = settings.sort_key
 
 
 def get_template(lifoid_id, name, lang):
     template_key = '{}:{}:{}'.format(lifoid_id, name, lang)
     logger.debug('Get template {}'.format(template_key))
-    template = TemplateRepository().latest(template_key)
-    print(template)
+    template = TemplateRepository(
+        settings.repository,
+        settings.context_prefix).latest(template_key)
     if template is None:
         raise TemplateNotFound
     return Template(template['content'])

@@ -12,8 +12,4 @@ class BotRepository(Repository):
     """
     A place to store our bots
     """
-    backend = settings.repository
-    prefix = settings.context_prefix
     klass = Bot
-    key = settings.key
-    sort_key = settings.sort_key

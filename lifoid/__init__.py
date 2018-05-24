@@ -53,8 +53,10 @@ class Lifoid(LoggingMixin):
             )
         except ImportError:
             self.logger.warning('no settings configured')
-        self.context_rep = BotRepository()
-        self.message_rep = MessageRepository()
+        self.context_rep = BotRepository(settings.repository,
+                                         settings.context_prefix)
+        self.message_rep = MessageRepository(settings.repository,
+                                             settings.context_prefix)
 
         self.renderer = renderer
 
