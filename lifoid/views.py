@@ -58,7 +58,7 @@ def get_template(lifoid_id, name, lang):
     logger.debug('Get template {}'.format(template_key))
     template = TemplateRepository(
         settings.repository,
-        settings.context_prefix).latest(template_key)
+        settings.template_prefix).latest(template_key)
     if template is None:
         raise TemplateNotFound
     return Template(template['content'])

@@ -9,6 +9,7 @@ from loggingmixin import ServiceLogger
 from lifoid.message.repository import MessageRepository
 from lifoid.utils.asdict import namedtuple_asdict
 from lifoid.auth import get_user
+from lifoid.config import settings
 logger = ServiceLogger()
 
 messages = Blueprint('messages', __name__)
@@ -36,7 +37,8 @@ def index():
     if user is None:
         abort(403)
     try:
-        rep = MessageRepository()
+        rep = MessageRepository(settings.repository,
+                                settings.message_prefix)
         if 'from_date' in data:
             response = rep.history(
                 '{}:{}'.format(data['chatbot_id'], user['username']),
