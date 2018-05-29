@@ -106,10 +106,10 @@ class Lifoid(LoggingMixin):
 
     @memoized
     def bot_conf(self):
-        bot_conf_handler = self.plugator.get_plugin(signals.get_bot_conf)
-        if bot_conf_handler is not None:
-            return bot_conf_handler(self.lifoid_id)
-        return None
+        return self.plugator.get_plugin(
+            signals.get_bot_conf,
+            lifoid_id=self.lifoid_id
+        )
 
     def reply(self, message, reply_id, context_id=None):
         """Handles message and reply.
@@ -160,6 +160,10 @@ class Lifoid(LoggingMixin):
         if self.bot_conf is not None and\
            self.context['__lang__'] != self.bot_conf['language'] and\
            self.bot_conf['language'] not in self.context['__lang__']:
+            self.logger.debug(
+                'bot_conf language: {}'.format(self.bot_conf['language']))
+            self.logger.debug(
+                'context language: {}'.format(self.context['__lang__']))
             _from = self.context['__lang__'].split('-')[0]
             _to = self.bot_conf['language'].split('-')[0]
             message.translate(self.translator,
