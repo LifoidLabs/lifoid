@@ -8,6 +8,7 @@ from importlib import import_module
 from commis import Command, color
 from lifoid.views import (TemplateRepository, TemplateRecord,
                           load_templates_path)
+from lifoid.config import settings
 
 
 def load_template(lifoid_id, path, lang):
