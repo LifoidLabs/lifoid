@@ -87,7 +87,7 @@ CONFIG = {
         'python-singleton',
         'python-awesome-decorators',
         'python-dateutil==2.6.1',
-        'python-jsonrepo',
+        'python-jsonrepo==0.1.7',
         'dateparser',
         'python-dotenv==0.6.4',
         'commis==0.3',

@@ -13,3 +13,4 @@ class BotRepository(Repository):
     A place to store our bots
     """
     klass = Bot
+    sort_key = ''

@@ -56,7 +56,7 @@ class Lifoid(LoggingMixin):
         self.context_rep = BotRepository(settings.repository,
                                          settings.context_prefix)
         self.message_rep = MessageRepository(settings.repository,
-                                             settings.context_prefix)
+                                             settings.message_prefix)
 
         self.renderer = renderer
 

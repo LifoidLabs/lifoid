@@ -48,7 +48,7 @@ class ConversationsTestCase(unittest.TestCase):
             self.tests_path = app_settings_module.TESTS_PATH
         self.messages = MessageRepository(
             settings.repository,
-            settings.context_prefix
+            settings.message_prefix
         )
 
     def tearDown(self):

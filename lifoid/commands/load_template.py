@@ -13,7 +13,7 @@ from lifoid.config import settings
 
 def load_template(lifoid_id, path, lang):
     template_rep = TemplateRepository(settings.repository,
-                                      settings.context_prefix)
+                                      settings.template_prefix)
     for template in load_templates_path(path):
         record = TemplateRecord()
         record.update(template)
