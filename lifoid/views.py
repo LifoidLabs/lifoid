@@ -77,10 +77,10 @@ def template_extension(template_name):
 
 
 def render_view(render, template_name, **kwargs):
-    if template_extension(template_name) == 'yaml':
+    try:
         return render(get_yaml_view(template_name, **kwargs))
-    else:
-        return render(get_text_view(template_name, **kwargs))
+    except:
+        render(get_text_view(template_name, **kwargs))
 
 
 def get_yaml_view(template_name, **kwargs):
