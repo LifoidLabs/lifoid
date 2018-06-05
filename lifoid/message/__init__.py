@@ -6,7 +6,7 @@ from loggingmixin import LoggingMixin
 
 
 _fields = ['date', 'ttl', 'from_user', 'to_user', 'payload',
-           'type']
+           'type', 'lifoid_id']
 
 
 class Message(namedtuple('Message', _fields), NamedtupleRecord, LoggingMixin):

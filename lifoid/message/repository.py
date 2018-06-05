@@ -13,3 +13,4 @@ class MessageRepository(Repository):
     Messages Repository
     """
     klass = Message
+    secondary_indexes = ['lifoid_id']

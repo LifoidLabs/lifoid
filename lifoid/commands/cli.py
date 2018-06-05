@@ -56,6 +56,7 @@ class CliCommand(Command):
                             type=TEXT,
                             payload=Payload(text='',
                                             attachments=input_msg),
+                            lifoid_id=lifoid_id
                         )
                     else:
                         msg = LifoidMessage(
@@ -64,6 +65,7 @@ class CliCommand(Command):
                             type=TEXT,
                             payload=Payload(text=input_msg,
                                             attachments=None),
+                            lifoid_id=lifoid_id
                         )
                     Lifoid(
                         lifoid_id=lifoid_id,

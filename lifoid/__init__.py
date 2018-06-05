@@ -128,7 +128,8 @@ class Lifoid(LoggingMixin):
             for message in messages:
                 msg = message._replace(
                     from_user=self.lifoid_id,
-                    to_user=reply_id)
+                    to_user=reply_id,
+                    lifoid_id=self.lifoid_id)
                 self.message_rep.save(
                     '{}:{}'.format(self.lifoid_id, reply_id),
                     msg.date, msg)

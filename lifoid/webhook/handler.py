@@ -30,6 +30,7 @@ def process_event(event):
                         attachments=event['q'].get('attachments', None)),
         type=TEXT,
         date=event['date'],
+        lifoid_id=event['lifoid_id']
     )
     return Lifoid(
         lifoid_id=event['chatbot_id'],
