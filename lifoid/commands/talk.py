@@ -20,7 +20,7 @@ def send_message(url, mess, lifoid_id):
         rv = requests.post(
             '{}/webhook'.format(url),
             data=json.dumps({
-                'chatbot_id': lifoid_id,
+                'lifoid_id': lifoid_id,
                 'access_token': 'access_token',
                 'q': {
                     'text': mess,
@@ -34,7 +34,7 @@ def send_message(url, mess, lifoid_id):
     rv = requests.post(
         '{}/messages'.format(url),
         data=json.dumps({
-            'chatbot_id': lifoid_id,
+            'lifoid_id': lifoid_id,
             'access_token': 'access_token',
             'from_date': from_date,
             'user': {

@@ -41,12 +41,12 @@ def index():
                                 settings.message_prefix)
         if 'from_date' in data:
             response = rep.history(
-                '{}:{}'.format(data['chatbot_id'], user['username']),
+                '{}:{}'.format(data['lifoid_id'], user['username']),
                 _from=data['from_date'],
                 _desc=False)
         else:
             response = rep.history(
-                '{}:{}'.format(data['chatbot_id'], user['username']),
+                '{}:{}'.format(data['lifoid_id'], user['username']),
                 _to=data['to_date'],
                 _desc=True)
         logger.debug('messages: {}'.format(response))

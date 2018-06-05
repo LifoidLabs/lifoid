@@ -82,7 +82,7 @@ class ConversationsTestCase(unittest.TestCase):
                         rv = self.app.post(
                             '/webhook',
                             data=json.dumps({
-                                'chatbot_id': ConversationsTestCase.LIFOID_ID,
+                                'lifoid_id': ConversationsTestCase.LIFOID_ID,
                                 'access_token': 'access_token',
                                 'q': {
                                     'text': mess,
@@ -99,7 +99,7 @@ class ConversationsTestCase(unittest.TestCase):
                     rv = self.app.post(
                         '/messages',
                         data=json.dumps({
-                            'chatbot_id': ConversationsTestCase.LIFOID_ID,
+                            'lifoid_id': ConversationsTestCase.LIFOID_ID,
                             'access_token': 'access_token',
                             'from_date': from_date,
                             'user': {

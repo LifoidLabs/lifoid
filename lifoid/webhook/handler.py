@@ -33,7 +33,7 @@ def process_event(event):
         lifoid_id=event['lifoid_id']
     )
     return Lifoid(
-        lifoid_id=event['chatbot_id'],
+        lifoid_id=event['lifoid_id'],
         lang=event.get('lang', 'en'),
         renderer=Renderer()
     ).reply(msg, event['user']['username'],
