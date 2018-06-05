@@ -53,7 +53,7 @@ class Handler(LoggingMixin):
         returns a response or not
         """
         if e_type == E_POST and 'q' in event and 'access_token' in event\
-           and 'chatbot_id' in event:
+           and 'lifoid_id' in event:
             user = get_user(event)
             if user is None:
                 raise LifoidRequestForbiddenError()
