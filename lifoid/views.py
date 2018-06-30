@@ -89,6 +89,10 @@ def get_yaml_view(template_name, **kwargs):
         attachments = []
         if 'attachments' in content:
             for attachment in content['attachments']:
+                if 'image_url' in attachment.keys():
+                    attachments.append(Attachment(
+                        file_url=attachment['image_url'],
+                        text=attachment['text']))
                 if 'file_url' in attachment.keys():
                     attachments.append(Attachment(
                         file_url=attachment['file_url'],
