@@ -133,7 +133,7 @@ class Lifoid(LoggingMixin):
                 self.message_rep.save(
                     '{}:{}'.format(self.lifoid_id, reply_id),
                     msg.date, msg)
-            return self.renderer.render(messages, reply_id)
+                self.renderer.render([msg], reply_id)
 
         if context_id is None:
             context_id = reply_id
