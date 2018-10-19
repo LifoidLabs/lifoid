@@ -86,8 +86,8 @@ def render_view(render, template_name, **kwargs):
 def get_yaml_view(template_name, **kwargs):
     try:
         content = yaml.load(render_template(template_name, **kwargs))
-        attachments = []
-        if 'attachments' in content:
+        if 'text' in content and 'attachments' in content:
+            attachments = []
             for attachment in content['attachments']:
                 if 'image_url' in attachment.keys():
                     attachments.append(Attachment(
@@ -128,6 +128,11 @@ def get_yaml_view(template_name, **kwargs):
                         rows=attachment['table']['rows'],
                         types=attachment['table']['types']
                     )))
+            return [LifoidMessage(
+                payload=Payload(
+                    text=content['text'],
+                    attachments=attachments))]
+        return [LifoidMessage(payload=content)]
     except KeyError:
         logger.error('malformed content in template {}'.format(template_name))
         raise
@@ -137,10 +142,7 @@ def get_yaml_view(template_name, **kwargs):
     except yaml.parser.ParserError:
         logger.error('malformed content in template {}'.format(template_name))
         raise
-    return [LifoidMessage(
-        payload=Payload(
-            text=content['text'],
-            attachments=attachments))]
+    
 
 
 def get_text_view(template_name, **kwargs):
