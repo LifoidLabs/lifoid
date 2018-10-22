@@ -1,0 +1,31 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "*"
+flask-babel = "*"
+requests = "*"
+transitions = "*"
+pyyaml = "*"
+blinker = "*"
+flask-cors = "*"
+"flask-s3" = "*"
+commis = "*"
+colorama = "*"
+python-dotenv = "*"
+dateparser = "*"
+python-singleton = "*"
+python-awesome-decorators = "*"
+python-dateutil = "==2.6.1"
+python-jsonrepo = "*"
+six = "*"
+
+[dev-packages]
+"autopep8" = "*"
+pylint = "*"
+tox = "*"
+
+[requires]
+python_version = "3.6"
