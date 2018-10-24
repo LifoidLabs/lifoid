@@ -21,11 +21,13 @@ python-awesome-decorators = "*"
 python-dateutil = "==2.6.1"
 python-jsonrepo = "*"
 six = "*"
+paho-mqtt = "*"
 
 [dev-packages]
 "autopep8" = "*"
 pylint = "*"
 tox = "*"
+bpython = "*"
 
 [requires]
 python_version = "3.6"

@@ -14,12 +14,13 @@ import logging
 from commis import color
 from commis import ConsoleProgram
 from lifoid.commands.run import RunCommand
-from lifoid.commands.talk import TalkCommand
+from lifoid.commands.chat import ChatCommand
 from lifoid.commands.init import InitCommand
 from lifoid.commands.test import TestCommand
 from lifoid.commands.load_static import LoadstaticCommand
 from lifoid.commands.cli import CliCommand
 from lifoid.commands.load_template import LoadTemplatesCommand
+from lifoid.commands.mqtt import MQTTCommand
 from lifoid.config import settings
 from lifoid.signals import get_command
 from lifoid.plugin import Plugator
@@ -33,9 +34,10 @@ COMMANDS = [
     CliCommand,
     TestCommand,
     RunCommand,
-    TalkCommand,
+    ChatCommand,
     LoadstaticCommand,
     LoadTemplatesCommand,
+    MQTTCommand
 ]
 
 
