@@ -11,10 +11,24 @@ from lifoid.bot import Bot
 
 class Automaton(Bot):
     """
-    Hierchical FSM Bot
+    IoT bot based on state-machine.
+    State-machine is provided by https://github.com/pytransitions/transitions
+    Various kind of "Machines" are available. By default `Automaton` implements
+    `HierarchicalMachine`. GraphMachine can be used to get a visualization with
+    PyGraphviz.
+    JSON serialization methods allow to save and load state-machines.
+    In cases where event dispatching is done in threads, one can use
+    either LockedMachine or LockedHierarchicalMachine where function access
+    (!sic) is secured with reentrant locks. This does not save you from
+    corrupting your machine by tinkering with member variables of your model or
+    state machine.
+
     """
     @classmethod
     def from_json(cls, json_dump):
+        """
+        Instantiates and returns an Automaton from a JSON object
+        """
         ctxt = json.loads(json_dump)
         automaton = cls(ctxt['lifoid_id'])
         for k in ctxt:
@@ -24,6 +38,9 @@ class Automaton(Bot):
 
     @timeit
     def load_machine(self, mtype, states, transitions, initial):
+        """
+        Builds and returns a state-machine along with time spent doing so.
+        """
         return mtype(
             model=self,
             states=states,
@@ -46,13 +63,13 @@ class Automaton(Bot):
 
     def finalize(self, _render, _message):
         """
-        Always logs machine state
+        Always logs machine state after processing a message
         """
         self.logger.debug('State: {}'.format(self.state))
 
     def prepare(self, _render, _message):
         """
-        Always logs machine state
+        Always logs machine state before processing a message
         """
         self.logger.debug('State: {}'.format(self.state))
 
