@@ -24,25 +24,27 @@ class Plugator(LoggingMixin):
         signals.get_conf.send(conf)
 
     def init_paths(self, plugins_paths):
-        for pluginpath in self._plugins_paths:
-            sys.path.insert(0, pluginpath)
+        if self._plugins_paths is not None:
+            for pluginpath in self._plugins_paths:
+                sys.path.insert(0, pluginpath)
 
     def init_plugins(self, plugins):
-        for plugin in plugins:
-            # if it's a string, then import it
-            if isinstance(plugin, string_types):
-                self.logger.debug("Loading plugin `%s`", plugin)
-                try:
-                    plugin = __import__(plugin, globals(), locals(),
-                                        str('module'))
-                except ImportError as e:
-                    self.logger.error(
-                        "Cannot load plugin `%s`\n%s", plugin, e)
-                    continue
+        if plugins is not None:
+            for plugin in plugins:
+                # if it's a string, then import it
+                if isinstance(plugin, string_types):
+                    self.logger.debug("Loading plugin `%s`", plugin)
+                    try:
+                        plugin = __import__(plugin, globals(), locals(),
+                                            str('module'))
+                    except ImportError as e:
+                        self.logger.error(
+                            "Cannot load plugin `%s`\n%s", plugin, e)
+                        continue
 
-            self.logger.debug("Registering plugin `%s`", plugin.__name__)
-            plugin.register()
-            self._plugins.append(plugin)
+                self.logger.debug("Registering plugin `%s`", plugin.__name__)
+                plugin.register()
+                self._plugins.append(plugin)
 
     def get_plugins(self, plugin, *args, **kwargs):
         return [w for (_, w) in plugin.send(*args, **kwargs)]
