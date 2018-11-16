@@ -7,6 +7,5 @@ TRANSLATIONS_PATH = os.path.join(PROJECT_ROOT, 'translations')
 TESTS_PATH = os.path.join(PROJECT_ROOT, 'tests')
 PLUGIN_PATHS = []
 PLUGINS = [
-    'lifoid.webhook',
     'lifoid.client_auth'
 ]
