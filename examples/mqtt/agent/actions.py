@@ -13,7 +13,7 @@ def hello(render, message, context):
 @action(lambda message, context: 'name' in message.payload.text.lower())
 def name(render, message, context):
     tokens = message.payload.text.split()
-    context['name'] = tokens[len(tokens) - 1]
+    context['name'] = tokens[-1]
     return render([
         LifoidMessage(payload=Payload(text='Hello {}'.format(context['name'])))
     ])
