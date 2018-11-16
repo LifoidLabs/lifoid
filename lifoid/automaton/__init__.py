@@ -22,7 +22,6 @@ class Automaton(Bot):
     (!sic) is secured with reentrant locks. This does not save you from
     corrupting your machine by tinkering with member variables of your model or
     state machine.
-
     """
     @classmethod
     def from_json(cls, json_dump):

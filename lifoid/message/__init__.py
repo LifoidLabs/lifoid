@@ -6,7 +6,7 @@ from loggingmixin import LoggingMixin
 
 
 _fields = ['date', 'ttl', 'from_user', 'to_user', 'payload',
-           'type', 'lifoid_id']
+           'message_type', 'lifoid_id', 'topic']
 
 
 class Message(namedtuple('Message', _fields), NamedtupleRecord, LoggingMixin):
@@ -68,7 +68,7 @@ class Table(namedtuple('Table', _table_fields)):
 
 
 _action_fields = [
-    'type', 'name', 'text', 'style', 'value', 'options'
+    'action_type', 'name', 'text', 'style', 'value', 'options'
 ]
 
 
@@ -90,7 +90,7 @@ class ButtonAction(Action):
     def __new__(cls, **kwargs):
         default = {f: None for f in _action_fields}
         default.update(kwargs)
-        default['type'] = 'button'
+        default['action_type'] = 'button'
         if default['style'] is None:
             default['style'] = 'default'
         if (default['text'] is None and default['value'] is None and
@@ -107,7 +107,7 @@ class MenuAction(Action):
     def __new__(cls, **kwargs):
         default = {f: None for f in _action_fields}
         default.update(kwargs)
-        default['type'] = 'select'
+        default['action_type'] = 'select'
         return super(MenuAction, cls).__new__(
             cls, **default)
 

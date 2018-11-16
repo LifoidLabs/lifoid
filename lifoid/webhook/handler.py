@@ -9,7 +9,7 @@ from six import add_metaclass
 from singleton import Singleton
 from loggingmixin import LoggingMixin
 from lifoid import Lifoid
-from lifoid.message.message_types import TEXT
+from lifoid.message.message_types import CHAT
 from lifoid.message import LifoidMessage, Payload
 from lifoid.constants import E_POST
 from lifoid.webhook.renderer import Renderer
@@ -28,7 +28,7 @@ def process_event(event):
         to_user='lifoid',
         payload=Payload(text=event['q']['text'],
                         attachments=event['q'].get('attachments', None)),
-        type=TEXT,
+        message_type=CHAT,
         date=event['date'],
         lifoid_id=event['lifoid_id']
     )

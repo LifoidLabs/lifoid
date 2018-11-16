@@ -8,7 +8,7 @@ import json
 from commis import Command, color
 from lifoid import Lifoid
 from lifoid.message import LifoidMessage, Payload
-from lifoid.message.message_types import TEXT
+from lifoid.message.message_types import CHAT
 from lifoid.renderer.talk import SimpleToTalkRenderer
 from lifoid.constants import HEADER
 
@@ -53,7 +53,7 @@ class CliCommand(Command):
                         msg = LifoidMessage(
                             from_user='me',
                             to_user='lifoid_id',
-                            type=TEXT,
+                            type=CHAT,
                             payload=Payload(text='',
                                             attachments=input_msg),
                             lifoid_id=lifoid_id
@@ -62,7 +62,7 @@ class CliCommand(Command):
                         msg = LifoidMessage(
                             from_user='me',
                             to_user='talk',
-                            type=TEXT,
+                            type=CHAT,
                             payload=Payload(text=input_msg,
                                             attachments=None),
                             lifoid_id=lifoid_id

@@ -4,10 +4,7 @@
 #
 # Copyright (C) 2017-2018 Romary Dupuis
 
-# Unified bot experience
-TEXT = 'text'
-IMAGE = 'image'
-VIDEO = 'video'
+CHAT = 'chat'
 UNKNOWN = 'unknown'
 # Slack bot
 SLACK_EVENT = 'slack_event'
