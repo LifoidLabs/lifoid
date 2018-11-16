@@ -111,7 +111,7 @@ class Lifoid(LoggingMixin):
             lifoid_id=self.lifoid_id
         )
 
-    def reply(self, message, reply_id, context_id=None):
+    def reply(self, message, reply_id=None, context_id=None):
         """Handles message and reply.
 
         In this method, the following operations are executed.
@@ -134,6 +134,7 @@ class Lifoid(LoggingMixin):
                     '{}:{}'.format(self.lifoid_id, reply_id),
                     msg.date, msg)
                 self.renderer.render([msg], reply_id)
+            return messages
 
         if context_id is None:
             context_id = reply_id
