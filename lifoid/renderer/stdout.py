@@ -5,5 +5,6 @@ class StdoutRenderer(Renderer):
 
     api = 'stdout'
 
-    def render(self, message, receiver_id):
-        print(message)
+    def render(self, messages, receiver_id):
+    	for message in messages:
+        	print(message)
