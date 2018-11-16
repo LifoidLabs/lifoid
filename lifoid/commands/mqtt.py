@@ -8,7 +8,7 @@ from lifoid import Lifoid
 from lifoid.utils.asdict import namedtuple_asdict
 from lifoid.constants import HEADER
 from lifoid.message import LifoidMessage, Payload
-from lifoid.message.message_types import TEXT
+from lifoid.message.message_types import CHAT
 from lifoid.renderer import Renderer
 
 
@@ -28,7 +28,7 @@ class MQTTRenderer(Renderer, LoggingMixin):
                 'Response: {}'.format(json.dumps(namedtuple_asdict(msg))))
             msgs.append(
                 {
-                    'topic': 'example',
+                    'topic': msg.to_user,
                     'payload': json.dumps(namedtuple_asdict(msg))
                 }
             )
@@ -43,32 +43,33 @@ def on_connect(client, userdata, _flags, result_code):
     print(HEADER)
     print(color.format('* I am listening {}'.format(
         userdata['lifoid_id']), color.GREEN))
-    client.subscribe(userdata['lifoid_id'], 1)
+    client.subscribe('#', 1)
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
 
 
-# The callback for when a PUBLISH message is received from the server.
+# The callback for when am PUBLISH message is received from the server.
 def on_message(_client, userdata, msg):
     lifoid_obj = Lifoid(
         lifoid_id=userdata['lifoid_id'],
         renderer=MQTTRenderer()
     )
     try:
-        json_loaded = json.loads(msg.payload.decode('utf-8'))
-        if json_loaded['to_user'] in [userdata['lifoid_id'], '*']:
-            lifoid_obj.logger.debug(
+        # Identify the message type
+        lifoid_obj.logger.debug(
                 'MQTT {}'.format(msg.payload.decode('utf-8'))
             )
+        json_loaded = json.loads(msg.payload.decode('utf-8'))
+        if json_loaded['message_type'] == CHAT:
+            msg = LifoidMessage(**json_loaded)
+            msg.payload(LifoidMessage(**json_loaded['payload']))
+        else:
             msg = LifoidMessage(
-                from_user=json_loaded['from_user'],
-                to_user=json_loaded['to_user'],
-                type=TEXT,
-                payload=Payload(text=str(json_loaded['payload']['text']),
-                                attachments=None),
+                topic=msg.topic,
+                payload=msg.payload.decode('utf-8'),
                 lifoid_id=userdata['lifoid_id']
             )
-            lifoid_obj.reply(msg, json_loaded['from_user'])
+            lifoid_obj.reply(msg, msg.topic)
     except Exception:
         lifoid_obj.logger.error(traceback.format_exc())
 
@@ -102,17 +103,19 @@ class MQTTCommand(Command):
 
     def handle(self, args):
         try:
-            mqtt_client = mqtt.Client(
-                userdata={
-                    'lifoid_id': args.lifoid_id
-                }
-            )
-            mqtt_client.on_connect = on_connect
-            mqtt_client.on_message = on_message
+            from lifoid.www.app import app
+            with app.app_context():
+                mqtt_client = mqtt.Client(
+                    userdata={
+                        'lifoid_id': args.lifoid_id
+                    }
+                )
+                mqtt_client.on_connect = on_connect
+                mqtt_client.on_message = on_message
 
-            mqtt_client.connect(args.host, args.port, 60)
+                mqtt_client.connect(args.host, args.port, 60)
 
-            mqtt_client.loop_forever()
+                mqtt_client.loop_forever()
         except KeyboardInterrupt:
             print(color.format('Keyboard interruption', color.RED))
         finally:
