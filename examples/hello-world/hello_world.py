@@ -15,7 +15,7 @@ class HelloWorldRenderer(Renderer):
     """
     def render(self, messages, receiver_id):
         for message in self.convert(messages):
-            print('--> {}'.format(message))
+            print('--> {}'.format(message.payload))
 
     def convert(self, messages):
         return messages
@@ -30,7 +30,7 @@ def hello_world(render, _message, _context):
     return render([
         LifoidMessage(
             message_type=CHAT,
-            payload='hello'
+            payload='hello world'
         )
     ])
 
@@ -38,12 +38,12 @@ def hello_world(render, _message, _context):
 lifoid = Lifoid(LIFOID_ID, actions=[hello_world],
                 renderer=HelloWorldRenderer())
 
-message = LifoidMessage(
-    payload=Payload(text='hello'),
-    message_type=CHAT
+# Say Hello
+resp = lifoid.reply(
+    LifoidMessage(
+        payload=Payload(text='hello'),
+        message_type=CHAT
+    )
 )
 
-resp = lifoid.reply(
-    message
-)
-print(resp)
+# --> hello world
