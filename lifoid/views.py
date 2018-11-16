@@ -7,7 +7,7 @@ Template views system based on Jinja2
 """
 from six import add_metaclass
 import sys
-from os import walk, getcwd
+from os import walk
 from os.path import join, dirname, abspath
 from importlib import import_module
 import yaml

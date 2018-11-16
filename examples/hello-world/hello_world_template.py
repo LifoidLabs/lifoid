@@ -42,16 +42,20 @@ def hello_john(render, _message, _context):
 lifoid = Lifoid(LIFOID_ID, actions=[hello_bob, hello_john],
                 renderer=HelloWorldRenderer())
 
+# Hello Bob
 resp = lifoid.reply(
     LifoidMessage(
         payload=Payload(text='I am Bob'),
         message_type=CHAT
     )
 )
+# --> {'text': 'hello Bob'}
 
-esp = lifoid.reply(
+# Hello John
+resp = lifoid.reply(
     LifoidMessage(
         payload=Payload(text='I am John'),
         message_type=CHAT
     )
 )
+# --> hello John
