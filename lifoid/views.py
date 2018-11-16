@@ -5,13 +5,17 @@
 """
 Template views system based on Jinja2
 """
-from os import walk
-from os.path import join
+from six import add_metaclass
+import sys
+from os import walk, getcwd
+from os.path import join, dirname, abspath
+from importlib import import_module
 import yaml
 import datetime
 import time
-from jinja2 import TemplateNotFound, Template
-from flask import render_template as flask_render_template
+from singleton import Singleton
+from jinja2 import (Environment, TemplateNotFound, Template,
+                    PackageLoader, FileSystemLoader)
 from flask_babel import gettext as flask_gettext
 from jsonrepo.repository import Repository
 from jsonrepo.record import DictRecord
@@ -22,6 +26,33 @@ from loggingmixin import ServiceLogger
 logger = ServiceLogger()
 
 MSG_SPLIT = '1234567890ab'
+
+
+@add_metaclass(Singleton)
+class TemplatesLoader(Environment):
+    """
+    Make a singleton of templates loader
+    """
+    def __init__(self, module, path):
+        super(TemplatesLoader, self).__init__(
+            loader=PackageLoader(module, path)
+        )
+
+
+def jinja2_render_template(template_name, **kwargs):
+    try:
+        app_settings_module = import_module(
+            settings.lifoid_settings_module
+        )
+        path = app_settings_module.TEMPLATES_PATH
+    except Exception:
+        path = join(abspath(dirname(sys.argv[0])), 'templates')
+    templates_loader = FileSystemLoader(path)
+    env = Environment(
+        loader=templates_loader
+    )
+    template = env.get_template(template_name)
+    return template.render(**kwargs)
 
 
 def load_templates_path(path):
@@ -142,7 +173,7 @@ def get_yaml_view(template_name, **kwargs):
     except yaml.parser.ParserError:
         logger.error('malformed content in template {}'.format(template_name))
         raise
-    
+
 
 
 def get_text_view(template_name, **kwargs):
@@ -160,4 +191,4 @@ gettext = flask_gettext
 if settings.templates == 'repository':
     render_template = lifoid_render_template
 else:
-    render_template = flask_render_template
+    render_template = jinja2_render_template

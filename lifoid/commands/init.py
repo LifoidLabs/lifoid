@@ -7,10 +7,8 @@
 import traceback
 import os
 from commis import Command, color
-from jinja2 import Environment, PackageLoader
-from six import add_metaclass
-from singleton import Singleton
 from lifoid.constants import HEADER
+from lifoid.views import TemplatesLoader
 
 PROJECT_TEMPLATE_PATH = os.path.join(os.path.dirname(
     os.path.realpath(__file__)), '../app/')
@@ -21,17 +19,6 @@ ACTIONS_TEMPLATE = 'actions_template.py'
 ROUTER_MODULE = 'router.py'
 ROUTER_TEMPLATE = 'router_template.py'
 PROJECT_NAME = 'agent'
-
-
-@add_metaclass(Singleton)
-class TemplatesLoader(Environment):
-    """
-    Make a singleton of templates loader
-    """
-    def __init__(self, module, path):
-        super(TemplatesLoader, self).__init__(
-            loader=PackageLoader(module, path)
-        )
 
 
 class InitCommand(Command):
