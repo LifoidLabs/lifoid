@@ -3,7 +3,7 @@ import time
 from collections import namedtuple
 from jsonrepo.record import NamedtupleRecord
 from loggingmixin import LoggingMixin
-
+from lifoid.message.message_types import CHAT
 
 _fields = ['date', 'ttl', 'from_user', 'to_user', 'payload',
            'message_type', 'lifoid_id', 'topic']
@@ -21,18 +21,23 @@ class Message(namedtuple('Message', _fields), NamedtupleRecord, LoggingMixin):
         if default['ttl'] is None:
             default['ttl'] = int(time.mktime(time.strptime(
                 default['date'], "%Y-%m-%dT%H:%M:%S.%f")))
+        if (isinstance(default['payload'], dict) and
+            default['message_type'] == CHAT):
+            default['payload'] = Chat(**default['payload'])
         return super(Message, cls).__new__(
             cls, **default)
 
 
-_payload_fields = ['text', 'attachments']
+_chat_fields = ['text', 'attachments']
 
 
-class Payload(namedtuple('Payload', _payload_fields)):
+class Chat(namedtuple('Chat', _chat_fields)):
     def __new__(cls, **kwargs):
-        default = {f: None for f in _payload_fields}
+        default = {f: None for f in _chat_fields}
         default.update(kwargs)
-        return super(Payload, cls).__new__(
+        if isinstance(default['attachments'], dict):
+            default['attachments'] = Attachment(**default['attachments'])
+        return super(Chat, cls).__new__(
             cls, **default)
 
 

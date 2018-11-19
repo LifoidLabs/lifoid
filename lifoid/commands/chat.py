@@ -15,7 +15,9 @@ def on_connect(client, userdata, _flags, _result_code):
     #print(
     #    color.format("Connected with result code "+str(result_code),
     #                 color.BLUE))
-    client.subscribe(userdata['lifoid_id'], 1)
+    client.subscribe(
+        '{}/{}'.format(userdata['lifoid_id'], userdata['user_id']),
+        1)
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
 
@@ -84,6 +86,8 @@ class ChatCommand(Command):
                 break
             if input_msg != 'exit':
                 data = json.dumps({
+                    'topic': '{}/{}'.format(args.lifoid_id,
+                                            user_id),
                     'lifoid_id': args.lifoid_id,
                     'from_user': user_id,
                     'to_user': args.lifoid_id,
@@ -91,6 +95,7 @@ class ChatCommand(Command):
                         'text': input_msg,
                         'attachments': None
                     },
+                    'message_type': 'chat'
                 })
                 mqtt_client.publish(args.lifoid_id, data)
             else:

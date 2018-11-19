@@ -1,7 +1,7 @@
 import os
 from lifoid import Lifoid
 from lifoid.action import action
-from lifoid.message import LifoidMessage, Payload
+from lifoid.message import LifoidMessage, Chat
 from lifoid.message.message_types import CHAT
 from lifoid.renderer import Renderer
 
@@ -41,7 +41,7 @@ lifoid = Lifoid(LIFOID_ID, actions=[hello_world],
 # Say Hello
 resp = lifoid.reply(
     LifoidMessage(
-        payload=Payload(text='hello'),
+        payload=Chat(text='hello'),
         message_type=CHAT
     )
 )

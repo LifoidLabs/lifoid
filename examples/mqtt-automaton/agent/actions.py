@@ -1,7 +1,7 @@
 from lifoid.action import action
 from lifoid.views import render_view
 from lifoid.automaton import Automaton
-from loggingmixin import LoggingMixin
+from lifoid.message.message_types import CHAT, M2M
 
 
 STATES = ['ready', 'ask_name']
@@ -35,7 +35,7 @@ TRANSITIONS = [
 ]
 
 
-class MQTTBot(Automaton, LoggingMixin):
+class MQTTBot(Automaton):
     """
     Example of automaton based MQTT Bot
     """
@@ -68,16 +68,13 @@ class MQTTBot(Automaton, LoggingMixin):
         return render_view(render, 'dont_understand.yml', context=self)
 
 
-@action(lambda message, _: 'hello' in message.payload.text)
+@action(lambda message, _: message.message_type == CHAT and
+        'hello' in message.payload.text)
 def greeting(render, message, mqtt_bot):
     mqtt_bot.greeting(render, message)
 
 
-@action(lambda message, _: 'name' in message.payload.text)
+@action(lambda message, _: message.message_type == CHAT and
+        'name' in message.payload.text)
 def user_name(render, message, mqtt_bot):
     mqtt_bot.user_name(render, message)
-
-
-@action()
-def unknown(render, message, mqtt_bot):
-    mqtt_bot.unknown(render, message)

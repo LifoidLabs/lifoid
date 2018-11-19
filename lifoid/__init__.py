@@ -127,6 +127,7 @@ class Lifoid(LoggingMixin):
             """
             for message in messages:
                 msg = message._replace(
+                    topic=reply_id,
                     from_user=self.lifoid_id,
                     to_user=reply_id,
                     lifoid_id=self.lifoid_id)

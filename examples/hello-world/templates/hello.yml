@@ -1,2 +1,4 @@
 --- # hello
-text: hello {{ context['name'] }}
+message_type: chat
+payload:
+  text: hello {{ context['name'] }}

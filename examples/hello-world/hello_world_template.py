@@ -1,6 +1,6 @@
 from lifoid import Lifoid
 from lifoid.action import action
-from lifoid.message import LifoidMessage, Payload
+from lifoid.message import LifoidMessage, Chat
 from lifoid.message.message_types import CHAT
 from lifoid.renderer import Renderer
 from lifoid.views import render_view
@@ -45,7 +45,7 @@ lifoid = Lifoid(LIFOID_ID, actions=[hello_bob, hello_john],
 # Hello Bob
 resp = lifoid.reply(
     LifoidMessage(
-        payload=Payload(text='I am Bob'),
+        payload=Chat(text='I am Bob'),
         message_type=CHAT
     )
 )
@@ -54,7 +54,7 @@ resp = lifoid.reply(
 # Hello John
 resp = lifoid.reply(
     LifoidMessage(
-        payload=Payload(text='I am John'),
+        payload=Chat(text='I am John'),
         message_type=CHAT
     )
 )
