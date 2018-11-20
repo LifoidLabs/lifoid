@@ -62,7 +62,7 @@ class CliCommand(Command):
                         msg = LifoidMessage(
                             from_user='me',
                             to_user='talk',
-                            type=CHAT,
+                            message_type=CHAT,
                             payload=Chat(text=input_msg,
                                          attachments=None),
                             lifoid_id=lifoid_id
