@@ -1,10 +1,14 @@
-from agent.actions import unknown, greeting, user_name, MQTTBot
+from agent.actions import (greeting, user_name,
+                           query_temperature,
+                           temperature_change,
+                           MQTTChatbot)
 
 
 actions = [
     greeting,
     user_name,
-    unknown
+    query_temperature,
+    temperature_change
 ]
 
-bot_model = MQTTBot
+bot_model = MQTTChatbot

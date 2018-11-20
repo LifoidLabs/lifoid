@@ -10,7 +10,7 @@ from singleton import Singleton
 from loggingmixin import LoggingMixin
 from lifoid import Lifoid
 from lifoid.message.message_types import CHAT
-from lifoid.message import LifoidMessage, Payload
+from lifoid.message import LifoidMessage, Chat
 from lifoid.constants import E_POST
 from lifoid.webhook.renderer import Renderer
 from lifoid.exceptions import LifoidRequestForbiddenError
@@ -26,7 +26,7 @@ def process_event(event):
     msg = LifoidMessage(
         from_user=event['user']['username'],
         to_user='lifoid',
-        payload=Payload(text=event['q']['text'],
+        payload=Chat(text=event['q']['text'],
                         attachments=event['q'].get('attachments', None)),
         message_type=CHAT,
         date=event['date'],

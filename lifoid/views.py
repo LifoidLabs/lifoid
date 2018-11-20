@@ -21,7 +21,8 @@ from jsonrepo.repository import Repository
 from jsonrepo.record import DictRecord
 from lifoid.config import settings
 from lifoid.message import (LifoidMessage, Attachment, ButtonAction, Option,
-                            Table, MenuAction, Payload)
+                            Table, MenuAction, Chat)
+from lifoid.message.message_types import CHAT
 from loggingmixin import ServiceLogger
 logger = ServiceLogger()
 
@@ -111,57 +112,61 @@ def render_view(render, template_name, **kwargs):
     try:
         return render(get_yaml_view(template_name, **kwargs))
     except:
+        raise
         render(get_text_view(template_name, **kwargs))
 
 
 def get_yaml_view(template_name, **kwargs):
     try:
         content = yaml.load(render_template(template_name, **kwargs))
-        if 'text' in content and 'attachments' in content:
+        if 'message_type' in content and content['message_type'] == CHAT:
+            payload = content['payload']
             attachments = []
-            for attachment in content['attachments']:
-                if 'image_url' in attachment.keys():
-                    attachments.append(Attachment(
-                        file_url=attachment['image_url'],
-                        text=attachment['text']))
-                if 'file_url' in attachment.keys():
-                    attachments.append(Attachment(
-                        file_url=attachment['file_url'],
-                        text=attachment['text']))
-                if 'buttons' in attachment.keys():
-                    actions = []
-                    for button in attachment['buttons']:
-                        if isinstance(button, dict):
-                            actions.append(ButtonAction(name=button['text'],
-                                                        value=button['value']))
-                        else:
-                            actions.append(ButtonAction(name=button))
-                    attachments.append(Attachment(actions=actions))
-                if 'select' in attachment.keys():
-                    options = []
-                    for option in attachment['select']:
-                        if isinstance(option, dict):
-                            options.append(
-                                Option(text=option['text'],
-                                       value=option.get('value',
-                                                        option['text']))
-                            )
-                        else:
-                            options.append(Option(text=option, value=option))
-                    attachments.append(Attachment(actions=[
-                        MenuAction(name='menu_select', options=options)
-                    ]))
-                if 'table' in attachment.keys():
-                    attachments.append(Attachment(table=Table(
-                        title=attachment['table']['title'],
-                        name=attachment['table']['name'],
-                        columns=attachment['table']['columns'],
-                        rows=attachment['table']['rows'],
-                        types=attachment['table']['types']
-                    )))
+            if 'attachments' in payload:
+                for attachment in payload['attachments']:
+                    if 'image_url' in attachment.keys():
+                        attachments.append(Attachment(
+                            file_url=attachment['image_url'],
+                            text=attachment['text']))
+                    if 'file_url' in attachment.keys():
+                        attachments.append(Attachment(
+                            file_url=attachment['file_url'],
+                            text=attachment['text']))
+                    if 'buttons' in attachment.keys():
+                        actions = []
+                        for button in attachment['buttons']:
+                            if isinstance(button, dict):
+                                actions.append(ButtonAction(name=button['text'],
+                                                            value=button['value']))
+                            else:
+                                actions.append(ButtonAction(name=button))
+                        attachments.append(Attachment(actions=actions))
+                    if 'select' in attachment.keys():
+                        options = []
+                        for option in attachment['select']:
+                            if isinstance(option, dict):
+                                options.append(
+                                    Option(text=option['text'],
+                                        value=option.get('value',
+                                                            option['text']))
+                                )
+                            else:
+                                options.append(Option(text=option, value=option))
+                        attachments.append(Attachment(actions=[
+                            MenuAction(name='menu_select', options=options)
+                        ]))
+                    if 'table' in attachment.keys():
+                        attachments.append(Attachment(table=Table(
+                            title=attachment['table']['title'],
+                            name=attachment['table']['name'],
+                            columns=attachment['table']['columns'],
+                            rows=attachment['table']['rows'],
+                            types=attachment['table']['types']
+                        )))
             return [LifoidMessage(
-                payload=Payload(
-                    text=content['text'],
+                message_type=CHAT,
+                payload=Chat(
+                    text=payload['text'],
                     attachments=attachments))]
         return [LifoidMessage(payload=content)]
     except KeyError:
@@ -182,7 +187,7 @@ def get_text_view(template_name, **kwargs):
     """
     content = render_template(template_name, MSG_SPLIT=MSG_SPLIT, **kwargs)
     return [LifoidMessage(
-        payload=Payload(
+        payload=Chat(
             text=text,
             attachments=None)) for text in content.split(MSG_SPLIT)]
 

@@ -7,7 +7,7 @@ import traceback
 import json
 from commis import Command, color
 from lifoid import Lifoid
-from lifoid.message import LifoidMessage, Payload
+from lifoid.message import LifoidMessage, Chat
 from lifoid.message.message_types import CHAT
 from lifoid.renderer.talk import SimpleToTalkRenderer
 from lifoid.constants import HEADER
@@ -54,8 +54,8 @@ class CliCommand(Command):
                             from_user='me',
                             to_user='lifoid_id',
                             type=CHAT,
-                            payload=Payload(text='',
-                                            attachments=input_msg),
+                            payload=Chat(text='',
+                                         attachments=input_msg),
                             lifoid_id=lifoid_id
                         )
                     else:
@@ -63,8 +63,8 @@ class CliCommand(Command):
                             from_user='me',
                             to_user='talk',
                             type=CHAT,
-                            payload=Payload(text=input_msg,
-                                            attachments=None),
+                            payload=Chat(text=input_msg,
+                                         attachments=None),
                             lifoid_id=lifoid_id
                         )
                     Lifoid(

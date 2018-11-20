@@ -1,7 +1,12 @@
+from collections import namedtuple
+import datetime
+from jsonrepo.repository import Repository
+from jsonrepo.record import NamedtupleRecord
 from lifoid.action import action
 from lifoid.views import render_view
 from lifoid.automaton import Automaton
-from loggingmixin import LoggingMixin
+from lifoid.message.message_types import CHAT, M2M
+from lifoid.config import settings
 
 
 STATES = ['ready', 'ask_name']
@@ -28,6 +33,16 @@ TRANSITIONS = [
         'after': ['ask_name']
     },
     {
+        'trigger': 'temperature_change', 'source': '*',
+        'dest': '=',
+        'after': ['set_temperature']
+    },
+    {
+        'trigger': 'query_temperature', 'source': '*',
+        'dest': '=',
+        'after': ['get_temperature']
+    },
+    {
         'trigger': 'unknown', 'source': '*',
         'dest': 'ready',
         'after': ['dont_understand']
@@ -35,7 +50,28 @@ TRANSITIONS = [
 ]
 
 
-class MQTTBot(Automaton, LoggingMixin):
+SENSOR_DATA_FIELDS = ['value']
+
+
+class SensorData(namedtuple('SensorData', SENSOR_DATA_FIELDS),
+                 NamedtupleRecord):
+    """
+    Example of namedtuple based record
+    """
+    def __new__(cls, **kwargs):
+        default = {f: None for f in SENSOR_DATA_FIELDS}
+        default.update(kwargs)
+        return super(SensorData, cls).__new__(cls, **default)
+
+
+class SensorDataRepository(Repository):
+    """
+    A place to store our sensors information
+    """
+    klass = SensorData
+
+
+class MQTTChatbot(Automaton):
     """
     Example of automaton based MQTT Bot
     """
@@ -43,7 +79,9 @@ class MQTTBot(Automaton, LoggingMixin):
         self.states = STATES
         self.transitions = TRANSITIONS
         self.initial = 'ready'
-        super(MQTTBot, self).__init__(lifoid_id)
+        self.sensor_data = SensorDataRepository(settings.repository,
+                                                'sensor-data')
+        super(MQTTChatbot, self).__init__(lifoid_id)
 
     def user_unknown(self, _render, _message):
         return self.get('name', None) is None
@@ -61,6 +99,15 @@ class MQTTBot(Automaton, LoggingMixin):
         self['ask_name_counter'] += 1
         return render_view(render, 'ask_name.yml', context=self)
 
+    def set_temperature(self, _, message):
+        data = SensorData(value=float(message.payload))
+        data_timestamp = datetime.datetime.utcnow().isoformat()[:-3]
+        self.sensor_data.save('temperature', data_timestamp, data)
+
+    def get_temperature(self, render, _message):
+        data = self.sensor_data.latest('temperature')
+        return render_view(render, 'give_temperature.yml', context=data.value)
+
     def ask_name_counter(self, _render, _message):
         return bool(self['ask_name_counter'] < 4)
 
@@ -68,16 +115,28 @@ class MQTTBot(Automaton, LoggingMixin):
         return render_view(render, 'dont_understand.yml', context=self)
 
 
-@action(lambda message, _: 'hello' in message.payload.text)
+@action(lambda message, _: message.message_type == CHAT and
+        'hello' in message.payload.text)
 def greeting(render, message, mqtt_bot):
     mqtt_bot.greeting(render, message)
 
 
-@action(lambda message, _: 'name' in message.payload.text)
+@action(lambda message, _: message.from_user != message.lifoid_id and
+        message.message_type == CHAT and
+        'name' in message.payload.text)
 def user_name(render, message, mqtt_bot):
     mqtt_bot.user_name(render, message)
 
 
-@action()
-def unknown(render, message, mqtt_bot):
-    mqtt_bot.unknown(render, message)
+@action(lambda message, _: message.from_user != message.lifoid_id and
+        message.message_type == CHAT and
+        'temperature' in message.payload.text)
+def query_temperature(render, message, mqtt_bot):
+    mqtt_bot.query_temperature(render, message)
+
+
+@action(lambda message, _:
+        message.message_type == M2M and
+        'temperature' in message.topic)
+def temperature_change(render, message, mqtt_bot):
+    mqtt_bot.temperature_change(render, message)

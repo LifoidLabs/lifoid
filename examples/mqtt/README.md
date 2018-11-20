@@ -1,5 +1,10 @@
 # Simple MQTT bot
 
+This project structure was initialized with `lifoid init` command.
+
+You can personalize the environment file `.env` according to the
+`.env.example` file and specification provided in Lifoid project root.
+
 Make sure there is a MQTT Broker available, e.g. Mosquitto.
 
 Here is an example to launch the bot with a local MQTT broker:
