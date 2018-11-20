@@ -60,7 +60,8 @@ def on_message(_client, userdata, mqtt_msg):
             'MQTT {}'.format(mqtt_msg.payload.decode('utf-8'))
         )
         json_loaded = json.loads(mqtt_msg.payload.decode('utf-8'))
-        if json_loaded['message_type'] == CHAT:
+        if (isinstance(json_loaded, dict) and
+            json_loaded['message_type'] == CHAT):
             lifoid_msg = LifoidMessage(**json_loaded)
         else:
             lifoid_msg = LifoidMessage(

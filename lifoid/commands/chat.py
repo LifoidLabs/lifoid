@@ -25,7 +25,7 @@ def on_connect(client, userdata, _flags, _result_code):
 # The callback for when a PUBLISH message is received from the server.
 def on_message(_client, userdata, msg):
     json_obj = json.loads(msg.payload.decode('utf-8'))
-    if json_obj['to_user'] in [userdata['user_id'], '*']:
+    if userdata['user_id'] in json_obj['to_user']:
         print('from {} --> {}'.format(
             json_obj['from_user'],
             json_obj['payload']['text']
@@ -85,9 +85,10 @@ class ChatCommand(Command):
             except KeyboardInterrupt:
                 break
             if input_msg != 'exit':
+                topic = '{}/{}'.format(args.lifoid_id,
+                                       user_id)
                 data = json.dumps({
-                    'topic': '{}/{}'.format(args.lifoid_id,
-                                            user_id),
+                    'topic':topic,
                     'lifoid_id': args.lifoid_id,
                     'from_user': user_id,
                     'to_user': args.lifoid_id,
@@ -97,7 +98,7 @@ class ChatCommand(Command):
                     },
                     'message_type': 'chat'
                 })
-                mqtt_client.publish(args.lifoid_id, data)
+                mqtt_client.publish(topic, data)
             else:
                 mqtt_client.loop_stop()
                 break
