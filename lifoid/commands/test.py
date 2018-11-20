@@ -50,6 +50,7 @@ class ConversationsTestCase(unittest.TestCase):
             settings.repository,
             settings.message_prefix
         )
+        settings.dev_auth = 'yes'
 
     def tearDown(self):
         pass
@@ -110,12 +111,13 @@ class ConversationsTestCase(unittest.TestCase):
                         follow_redirects=True)
                     json_rv = json.loads(rv.data.decode('utf8'))
                     assert('200' in rv.status)
+                    valid = True
                     if resp != 'DONT_CARE':
                         valid = False
                         for el in json_rv:
                             if resp in el['payload']['text']:
                                 valid = True
-                        assert(valid)
+                    self.assertTrue(valid)
                     print(color.format('< {}',
                           color.GREEN,
                           json_rv[0]['payload']['text']))
@@ -123,7 +125,7 @@ class ConversationsTestCase(unittest.TestCase):
                     print(color.format(filepath, color.RED))
                     print(color.format('Expected: {}', color.RED, resp))
                     print(color.format('Received: {}', color.RED,
-                          json_rv[0]['payload']['text']))
+                          json_rv))
                     raise
 
 
@@ -171,11 +173,13 @@ class TestCommand(Command):
                                color.GREEN))
         try:
             # unittest.main()
-            suite = unittest.TestLoader().loadTestsFromTestCase(ConversationsTestCase)
-            unittest.TextTestRunner(verbosity=2).run(suite)
+            suite = unittest.TestLoader().loadTestsFromTestCase(
+                ConversationsTestCase)
+            test_result = unittest.TextTestRunner(verbosity=2).run(suite)
+            if len(test_result.errors) > 0 or len(test_result.failures) > 0:
+                raise LifoidTestError()
             return color.format("* all tests passed", color.GREEN)
         except LifoidTestError as exc:
-            print(exc.args[0])
             print(color.format('* tests suite failed', color.RED))
         except Exception:
             print(traceback.format_exc())
