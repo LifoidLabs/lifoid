@@ -116,7 +116,7 @@ class MQTTChatbot(Automaton):
 
 
 @action(lambda message, _: message.message_type == CHAT and
-        'hello' in message.payload.text)
+        'hello' in message.payload.text.lower())
 def greeting(render, message, mqtt_bot):
     mqtt_bot.greeting(render, message)
 

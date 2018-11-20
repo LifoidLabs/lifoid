@@ -118,9 +118,10 @@ class ConversationsTestCase(unittest.TestCase):
                             if resp in el['payload']['text']:
                                 valid = True
                     self.assertTrue(valid)
-                    print(color.format('< {}',
-                          color.GREEN,
-                          json_rv[0]['payload']['text']))
+                    for msg in json_rv:
+                        print(color.format('< {}',
+                              color.GREEN,
+                              msg['payload']['text']))
                 except AssertionError:
                     print(color.format(filepath, color.RED))
                     print(color.format('Expected: {}', color.RED, resp))
