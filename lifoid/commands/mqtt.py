@@ -1,38 +1,12 @@
 import json
 import traceback
 import paho.mqtt.client as mqtt
-from paho.mqtt.publish import multiple
 from commis import Command, color
-from loggingmixin import LoggingMixin
 from lifoid import Lifoid
-from lifoid.utils.asdict import namedtuple_asdict
 from lifoid.constants import HEADER
 from lifoid.message import LifoidMessage
 from lifoid.message.message_types import CHAT, M2M
-from lifoid.renderer import Renderer
-
-
-class MQTTRenderer(Renderer, LoggingMixin):
-    """
-    Prototype of Lifoid renderer
-    """
-    api = 'mqtt'
-
-    def convert(self, messages):
-        return messages
-
-    def render(self, messages, receiver_id):
-        msgs = []
-        for msg in self.convert(messages):
-            self.logger.debug(
-                'MQTT Response: {}'.format(json.dumps(namedtuple_asdict(msg))))
-            msgs.append(
-                {
-                    'topic': receiver_id,
-                    'payload': json.dumps(namedtuple_asdict(msg))
-                }
-            )
-        multiple(msgs, hostname="localhost")
+from lifoid.renderer.mqtt import MQTTRenderer
 
 
 # The callback for when the client receives a CONNACK response from the server.
