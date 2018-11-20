@@ -8,31 +8,32 @@
 
 ## Vision ##
 
-Unlike most of chatbot development frameworks, we consider that a chatbot must be able to deal with messages that are not only conversation based, e.g. we would like to deal with messages from the IoT, sensors and actuators. A bot application in the Internet of Things must be able to combine interactions with humans and machines at the same time. 
+Unlike most of chatbot development frameworks, we consider that a chatbot must
+be able to deal with messages that are not only conversation based, e.g. we
+would like to deal with messages from the IoT, sensors and actuators. A bot
+application in the Internet of Things must be able to combine interactions with
+humans and machines at the same time.
+
+## Features ##
+
+Lifoid provides:
+- a message routing system that looks like Flask routing for urls.
+- a message pipeline system for NLU processing and automatic translation
+- a context management system that expends from a simple object to a full
+FSM based automaton. Context objects are stored and retrieved from key/value
+stores either in process memory, on Redis or Dynamodb.
+- services for:
+  - deploying a mqtt based bot
+  - chatting with a bot using mqtt
+  - chatting with a bot using an HTTP API
+  - accessing chat messages log using an HTTP API
 
 ## Quick Start ##
 
-```bash
-$ mkdir bot
-$ cd bot
-$ mkvirtualenv bot
-$ pip install lifoid
-$ lifoid init
-$ lifoid cli
-+-----------------------------------------------------------------------------+
-|                                                                             |
-|   Lifoid                                                                    |
-|                                                                             |
-|   Copyright (C) 2017-2018 Romary Dupuis                                     |
-|                                                                             |
-+-----------------------------------------------------------------------------+
+You should look at the examples provided in this repository.
 
-
-* I am listening
-> hello
-< Hello, what is your name?
-> ... 
-```
+Lifoid provides both a programmatic interface and servicesi, whose
+full documentation will be provided below (soon).
 
 ## Installation ##
 
@@ -40,7 +41,9 @@ $ lifoid cli
 $ pip install lifoid
 ```
 
-## How to make a chat bot project ##
+## How to make a bot project ##
+
+After installing Lifoid:
 
 **Start a project**
 
@@ -143,19 +146,31 @@ NLU_URL=http://127.0.0.1:5000
 
 **CLI**
 
-**Run** Launches a Lifoid server instance with configured webhooks
+**mqtt** Launches a Lifoid mqtt bot instance
 ```bash
-$ lifoid run --host 127.0.0.1 --port 5000
+lifoid mqtt --host localhost --port 1883 --lifoid_id simple-bot
 ```
 
-**Talk** Allows to talk to a Lifoid server with a terminal:
+**run** Launches a Lifoid server instance with configured webhooks
 ```bash
-$ lifoid talk --host 127.0.0.1 --port 5000
+$ lifoid run --host localhost --port 5000
 ```
 
-**Cli** Allows to talk to a lifoid chatbot without launching a Lifoid server:
+**talk** Allows to talk to a Lifoid server with a terminal:
+
+Over MQTT:
+Make sure a MQTT broker is available and make sure you have started a MQTT
+instance of Lifoid with `run`.
+
 ```bash
-$ lifoid cli
+$ lifoid talk --protocol mqtt --host localhost --port 1883
+```
+
+Over HTTP:
+Make sure you have started an HTTP instance of a Lifoid bot with `run`.
+
+```bash
+$ lifoid talk --protocol http --host localhost --port 5000
 ```
 
 **Test** Allows to run test dialogues
@@ -185,9 +200,11 @@ A file test is a YAML file that looks like that:
 ## Data store ##
 
 Contexts of discussions are by default stored in the process memory.
-This is not scalable but it's very convenient for development or a light service deployment.
+This is not scalable but it's very convenient for development or a light service
+deployment.
 
-In order to deploy several processes with a shared data store it's possible to use plugins that define new data store backends such as Redis and DynamoDB.
+In order to deploy several processes with a shared data store it's possible to
+use plugins that define new data store backends such as Redis and DynamoDB.
 
 ## Development ##
 
