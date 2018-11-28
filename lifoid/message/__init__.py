@@ -6,7 +6,7 @@ from loggingmixin import LoggingMixin
 from lifoid.message.message_types import CHAT
 
 _fields = ['date', 'ttl', 'from_user', 'to_user', 'payload',
-           'message_type', 'lifoid_id', 'topic']
+           'message_type', 'lifoid_id', 'topic', 'type']
 
 
 class Message(namedtuple('Message', _fields), NamedtupleRecord, LoggingMixin):
@@ -21,6 +21,8 @@ class Message(namedtuple('Message', _fields), NamedtupleRecord, LoggingMixin):
         if default['ttl'] is None:
             default['ttl'] = int(time.mktime(time.strptime(
                 default['date'], "%Y-%m-%dT%H:%M:%S.%f")))
+        # backward compatibility
+        default['message_type'] = default['type']
         if (isinstance(default['payload'], dict) and
             default['message_type'] == CHAT):
             default['payload'] = Chat(**default['payload'])
