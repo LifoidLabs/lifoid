@@ -53,6 +53,8 @@ def jinja2_render_template(template_name, **kwargs):
         loader=templates_loader
     )
     template = env.get_template(template_name)
+    if template is None:
+        return None
     return template.render(**kwargs)
 
 
@@ -112,17 +114,19 @@ def template_extension(template_name):
 
 
 def render_view(render, template_name, **kwargs):
-    try:
-        return render(get_yaml_view(template_name, **kwargs))
-    except:
-        render(get_text_view(template_name, **kwargs))
+    content = get_yaml_view(template_name, **kwargs)
+    if content is None:
+        content = get_text_view(template_name, **kwargs)
+    if content is None:
+        raise TemplateNotFound
+    return render(content)
 
 
 def get_yaml_view(template_name, **kwargs):
     try:
         rendered_template = render_template(template_name, **kwargs)
         if rendered_template is None:
-            return []
+            return None
         content = yaml.load(rendered_template)
         if 'message_type' in content and content['message_type'] == CHAT:
             payload = content['payload']
@@ -191,6 +195,8 @@ def get_text_view(template_name, **kwargs):
     Render a template view with a specific context
     """
     content = render_template(template_name, MSG_SPLIT=MSG_SPLIT, **kwargs)
+    if content is None:
+        return None
     return [LifoidMessage(
         payload=Chat(
             text=text,
