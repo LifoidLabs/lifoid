@@ -24,10 +24,11 @@ class Renderer(Renderer, LoggingMixin):
     def render(self, messages, receiver_id):
         for msg in self.convert(messages):
             import json
+            self.logger.debug(
+                'Response: {}'.format(json.dumps(namedtuple_asdict(msg))))
             response = IOT_CLIENT.publish(
                 topic='multibot/{}'.format(receiver_id),
                 qos=1,
                 payload=json.dumps(namedtuple_asdict(msg))
             )
-            self.logger.debug(
-                'Response: {}'.format(json.dumps(namedtuple_asdict(msg))))
+
