@@ -53,6 +53,8 @@ def jinja2_render_template(template_name, **kwargs):
         loader=templates_loader
     )
     template = env.get_template(template_name)
+    if template is None:
+        return None
     return template.render(**kwargs)
 
 
@@ -92,12 +94,15 @@ def get_template(lifoid_id, name, lang):
         settings.repository,
         settings.template_prefix).latest(template_key)
     if template is None:
-        raise TemplateNotFound
+        logger.error('Get template {}'.format(template_key))
+        return None
     return Template(template['content'])
 
 
 def lifoid_render_template(template_name, **kwargs):
     template = get_template(kwargs['lifoid_id'], template_name, kwargs['lang'])
+    if template is None:
+        return None
     return template.render(**kwargs)
 
 
@@ -109,16 +114,20 @@ def template_extension(template_name):
 
 
 def render_view(render, template_name, **kwargs):
-    try:
-        return render(get_yaml_view(template_name, **kwargs))
-    except:
-        raise
-        render(get_text_view(template_name, **kwargs))
+    content = get_yaml_view(template_name, **kwargs)
+    if content is None:
+        content = get_text_view(template_name, **kwargs)
+    if content is None:
+        raise TemplateNotFound
+    return render(content)
 
 
 def get_yaml_view(template_name, **kwargs):
     try:
-        content = yaml.load(render_template(template_name, **kwargs))
+        rendered_template = render_template(template_name, **kwargs)
+        if rendered_template is None:
+            return None
+        content = yaml.load(rendered_template)
         if 'message_type' in content and content['message_type'] == CHAT:
             payload = content['payload']
             attachments = []
@@ -186,6 +195,8 @@ def get_text_view(template_name, **kwargs):
     Render a template view with a specific context
     """
     content = render_template(template_name, MSG_SPLIT=MSG_SPLIT, **kwargs)
+    if content is None:
+        return None
     return [LifoidMessage(
         payload=Chat(
             text=text,
