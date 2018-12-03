@@ -136,11 +136,13 @@ class Lifoid(LoggingMixin):
 
         self.context['__lang__'] = self.lang
 
-        if settings.async == 'no' and settings.templates == 'fs':
+        if settings.async == 'no' and settings.templates == 'flask':
             try:
-                app.config['BABEL_DEFAULT_LOCALE'] = \
-                    self.context['__lang__'].replace('-', '_')
-                refresh()
+                from lifoid.www.app import app
+                with app.app_context():
+                    app.config['BABEL_DEFAULT_LOCALE'] = \
+                        self.context['__lang__'].replace('-', '_')
+                    refresh()
             except RuntimeError:
                 pass
 
