@@ -66,14 +66,20 @@ class ConversationsTestCase(unittest.TestCase):
         print(color.format(filepath, color.CYAN))
         with open(filepath) as file_handle:
             loaded = yaml.load(file_handle.read())
-            print('{} messages loaded...'.format(len(loaded)))
-            tests = [(loaded[i], loaded[i + 1])
-                     for i in range(0, len(loaded) - 1, 2)]
+            print('language {}'.format(loaded['lang']))
+            print('{} messages loaded...'.format(len(loaded['messages'])))
+            lang = loaded['lang']
+            tests = [(loaded['messages'][i], loaded['messages'][i + 1])
+                     for i in range(0, len(loaded['messages']) - 1, 2)]
             for mess, resp in tests:
                 print(color.format('> {}', color.CYAN, mess))
                 try:
                     try:
                         mess = json.loads(mess)
+                        mess.update({
+                            'lifoid_id': ConversationsTestCase.LIFOID_ID,
+                            'lang': lang
+                        })
                         rv = self.app.post(
                             '/webhook',
                             data=json.dumps(mess),
@@ -91,7 +97,8 @@ class ConversationsTestCase(unittest.TestCase):
                                 },
                                 'user': {
                                     'username': 'me'
-                                }
+                                },
+                                'lang': lang
                             }),
                             content_type='application/json',
                             follow_redirects=True)
