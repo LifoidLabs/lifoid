@@ -121,22 +121,6 @@ class Lifoid(LoggingMixin):
         - generates messages to reply by calling an action
         - make requests to API by calling renderer's ``render`` function
         """
-        def render(messages):
-            """
-            Bridge to renderer's render method
-            """
-            for message in messages:
-                msg = message._replace(
-                    topic=reply_id,
-                    from_user=self.lifoid_id,
-                    to_user=reply_id,
-                    lifoid_id=self.lifoid_id)
-                self.message_rep.save(
-                    '{}:{}'.format(self.lifoid_id, reply_id),
-                    msg.date, msg)
-                self.renderer.render([msg], reply_id)
-            return messages
-
         if context_id is None:
             context_id = reply_id
         self.context = self.context_rep.get(
@@ -174,6 +158,32 @@ class Lifoid(LoggingMixin):
                               _to=_to)
         message.parse(self.parser, self.context)
 
+        if settings.templates == 'flask':
+            from lifoid.www.app import app
+            with app.app_context():
+                self.process_actions(message, reply_id, context_id)
+        else:
+            self.process_actions(message, reply_id, context_id)
+
+        self.logger.warning('No action matched. Define fallback action.')
+        return None
+
+    def process_actions(self, message, reply_id, context_id):
+        def render(messages):
+            """
+            Bridge to renderer's render method
+            """
+            for message in messages:
+                msg = message._replace(
+                    topic=reply_id,
+                    from_user=self.lifoid_id,
+                    to_user=reply_id,
+                    lifoid_id=self.lifoid_id)
+                self.message_rep.save(
+                    '{}:{}'.format(self.lifoid_id, reply_id),
+                    msg.date, msg)
+                self.renderer.render([msg], reply_id)
+            return messages
         for candidate in self.actions:
             match, action = candidate(message, self.context)
             if match:
@@ -182,6 +192,3 @@ class Lifoid(LoggingMixin):
                     '{}:{}'.format(self.lifoid_id, context_id),
                     None, self.context)
                 return output
-
-        self.logger.warning('No action matched. Define fallback action.')
-        return None
