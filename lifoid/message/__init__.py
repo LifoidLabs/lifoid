@@ -60,7 +60,7 @@ class Attachment(namedtuple('Attachment', _attachment_fields)):
 
 
 _edit_fields = [
-    'action', 'text'
+    'action', 'text', 'translation'
 ]
 
 
