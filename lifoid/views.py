@@ -17,11 +17,12 @@ from singleton import Singleton
 from jinja2 import (Environment, TemplateNotFound, Template,
                     PackageLoader, FileSystemLoader)
 from flask_babel import gettext as flask_gettext
+from flask import render_template as flask_render_template
 from jsonrepo.repository import Repository
 from jsonrepo.record import DictRecord
 from lifoid.config import settings
 from lifoid.message import (LifoidMessage, Attachment, ButtonAction, Option,
-                            Table, MenuAction, Chat)
+                            Table, MenuAction, Chat, Edit)
 from lifoid.message.message_types import CHAT
 from loggingmixin import ServiceLogger
 logger = ServiceLogger()
@@ -172,6 +173,13 @@ def get_yaml_view(template_name, **kwargs):
                             rows=attachment['table']['rows'],
                             types=attachment['table']['types']
                         )))
+                    if 'edit' in attachment.keys():
+                        attachments.append(Attachment(
+                            edit=[
+                                Edit(**item) for item in attachment['edit']
+                            ]
+                        ))
+
             return [LifoidMessage(
                 message_type=CHAT,
                 payload=Chat(
@@ -206,5 +214,7 @@ def get_text_view(template_name, **kwargs):
 gettext = flask_gettext
 if settings.templates == 'repository':
     render_template = lifoid_render_template
+elif settings.templates == 'flask':
+    render_template = flask_render_template
 else:
     render_template = jinja2_render_template

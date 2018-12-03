@@ -22,7 +22,8 @@ class Message(namedtuple('Message', _fields), NamedtupleRecord, LoggingMixin):
             default['ttl'] = int(time.mktime(time.strptime(
                 default['date'], "%Y-%m-%dT%H:%M:%S.%f")))
         # backward compatibility
-        default['message_type'] = default['type']
+        if 'type' in kwargs.keys() and 'message_type' not in kwargs.keys():
+            default['message_type'] = default['type']
         if (isinstance(default['payload'], dict) and
             default['message_type'] == CHAT):
             default['payload'] = Chat(**default['payload'])
@@ -37,14 +38,14 @@ class Chat(namedtuple('Chat', _chat_fields)):
     def __new__(cls, **kwargs):
         default = {f: None for f in _chat_fields}
         default.update(kwargs)
-        if isinstance(default['attachments'], dict):
-            default['attachments'] = Attachment(**default['attachments'])
+        #if isinstance(default['attachments'], dict):
+        #    default['attachments'] = Attachment(**default['attachments'])
         return super(Chat, cls).__new__(
             cls, **default)
 
 
 _attachment_fields = [
-    'text', 'image_url', 'actions', 'table', 'file_url']
+    'text', 'image_url', 'actions', 'table', 'file_url', 'edit']
 
 
 class Attachment(namedtuple('Attachment', _attachment_fields)):
@@ -55,6 +56,22 @@ class Attachment(namedtuple('Attachment', _attachment_fields)):
         default = {f: None for f in _attachment_fields}
         default.update(kwargs)
         return super(Attachment, cls).__new__(
+            cls, **default)
+
+
+_edit_fields = [
+    'action', 'text'
+]
+
+
+class Edit(namedtuple('Table', _edit_fields)):
+    """
+    Edit action
+    """
+    def __new__(cls, **kwargs):
+        default = {f: None for f in _edit_fields}
+        default.update(kwargs)
+        return super(Edit, cls).__new__(
             cls, **default)
 
 
@@ -177,6 +194,7 @@ class LifoidMessage(Message):
             return
         results = translator.translate(self.payload.text, source=_from,
                                        target=_to)
+        self.logger.debug('translation: {}'.format(results))
         if len(results) > 0:
             self.translated = \
                 results[0]['translatedText'].replace(
