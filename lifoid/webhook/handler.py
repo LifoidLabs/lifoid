@@ -60,7 +60,7 @@ class Handler(LoggingMixin):
             event['date'] = datetime.datetime.utcnow().isoformat()[:-3]
             if asynchronous:
                 try:
-                    from zappa.async import run
+                    from zappa.asynchronous import run
                     run(process_event, args=(event,))
                 except ModuleNotFoundError:
                     p_reply = Process(target=process_event,
