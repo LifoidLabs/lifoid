@@ -32,7 +32,7 @@ def on_message(_client, userdata, msg):
         ))
 
 
-class ChatCommand(Command):
+class MQTTClientCommand(Command):
 
     name = 'mqtt_client'
     help = 'Talk to a lifoid MQTT bot'
