@@ -18,7 +18,7 @@ ACTIONS_MODULE = 'actions.py'
 ACTIONS_TEMPLATE = 'actions_template.py'
 ROUTER_MODULE = 'router.py'
 ROUTER_TEMPLATE = 'router_template.py'
-PROJECT_NAME = 'agent'
+PROJECT_NAME = 'bot'
 
 
 class InitCommand(Command):
