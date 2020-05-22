@@ -136,7 +136,7 @@ class Lifoid(LoggingMixin):
 
         self.context['__lang__'] = self.lang
 
-        if settings.async == 'no' and settings.templates == 'flask':
+        if settings.pasync == 'no' and settings.templates == 'flask':
             try:
                 from lifoid.www.app import app
                 with app.app_context():

@@ -123,10 +123,10 @@ class LifoidConfiguration(Configuration, LoggingMixin):
     """
     # Main
     debug = False
-    lifoid_id = environ_setting('LIFOID_ID', 'agent', required=False)
+    lifoid_id = environ_setting('LIFOID_ID', 'bot', required=False)
     lifoid_name = environ_setting('LIFOID_NAME', 'Bot', required=False)
     lifoid_settings_module = environ_setting('LIFOID_SETTINGS_MODULE',
-                                             'agent.settings',
+                                             'bot.settings',
                                              required=False)
     server = ServerConfiguration()
 
@@ -149,7 +149,7 @@ class LifoidConfiguration(Configuration, LoggingMixin):
     bot_prefix = environ_setting('BOT_PREFIX',
                                  'lifoid-bot', required=False)
     # Processing mode
-    async = environ_setting('ASYNC', 'no', required=False)
+    pasync = environ_setting('ASYNC', 'no', required=False)
     timeout = int(environ_setting('TIMEOUT', 180, required=False))
 
     # Misc

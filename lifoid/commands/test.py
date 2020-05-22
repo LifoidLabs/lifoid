@@ -169,7 +169,7 @@ class TestCommand(Command):
         """
         from lifoid.config import settings
         print(HEADER)
-        settings.async = 'no'
+        settings.pasync = 'no'
         ConversationsTestCase.LIFOID_ID = args.lifoid_id
         if args.path is not None:
             ConversationsTestCase.PATH = args.path
