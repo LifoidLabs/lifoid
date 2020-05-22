@@ -31,7 +31,7 @@ DESCRIPTION = "Management and administration commands for lifoid"
 EPILOG = \
 """
 If there are any bugs or concerns, submit an issue on Github:
-https://www.github.com/romaryd/lifoid.git
+https://www.github.com/LifoidLabs/lifoid.git
 """
 COMMANDS = [
     InitCommand,

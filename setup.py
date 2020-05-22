@@ -13,7 +13,7 @@ EMAIL = 'romary@me.com'
 MAINTAINER = 'Romary Dupuis'
 MAINTAINER_EMAIL = EMAIL
 LICENSE = 'Apache 2.0'
-REPOSITORY = 'https://github.com/romaryd/lifoid'
+REPOSITORY = 'https://github.com/LifoidLabs/lifoid'
 PACKAGE = 'lifoid'
 
 KEYWORDS = ('chatbot', 'lifoid', 'AI', 'framework')
