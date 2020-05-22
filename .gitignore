@@ -53,3 +53,4 @@ lifoid.egg*
 .Python
 /conf/lifoid.yaml
 /.cache/*
+/dev
