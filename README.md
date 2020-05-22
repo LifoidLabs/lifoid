@@ -247,17 +247,3 @@ or with setuptools
 ```bash
 $ python setup.py test
 ```
-
-## Getting help
-
-To get help with Lifoid, please contact Romary on romary@me.com
-
-
----
-
-*Author:*   Romary Dupuis <romary@me.com>
-
-*Copyright (C) 2017-2018 Romary Dupuis*
-
-
-
