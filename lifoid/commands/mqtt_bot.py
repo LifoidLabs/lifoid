@@ -15,7 +15,7 @@ def on_connect(client, userdata, _flags, result_code):
         color.format("Connected with result code "+str(result_code),
                      color.BLUE))
     print(HEADER)
-    print(color.format('* I am listening {}'.format(
+    print(color.format('* I am {}'.format(
         userdata['lifoid_id']), color.GREEN))
     client.subscribe('#', 1)
     # Subscribing in on_connect() means that if we lose the connection and
@@ -37,6 +37,8 @@ def on_message(_client, userdata, mqtt_msg):
         if (isinstance(json_loaded, dict) and \
             json_loaded['message_type'] == CHAT):
             lifoid_msg = LifoidMessage(**json_loaded)
+            if lifoid_msg.to_user == userdata['lifoid_id']:
+                lifoid_obj.reply(lifoid_msg, reply_id=mqtt_msg.topic)
         else:
             lifoid_msg = LifoidMessage(
                 topic=mqtt_msg.topic,
@@ -44,7 +46,7 @@ def on_message(_client, userdata, mqtt_msg):
                 lifoid_id=userdata['lifoid_id'],
                 message_type=M2M
             )
-        lifoid_obj.reply(lifoid_msg, reply_id=mqtt_msg.topic)
+            lifoid_obj.reply(lifoid_msg, reply_id=mqtt_msg.topic)
     except Exception:
         lifoid_obj.logger.error(traceback.format_exc())
 
@@ -72,7 +74,8 @@ class MQTTBotCommand(Command):
         '--lifoid_id': {
             'metavar': 'LIFOID_ID',
             'required': False,
-            'help': 'unique id of lifoid chatbot'
+            'help': 'unique id of lifoid chatbot',
+            'default': 'bot'
         }
     }
 
