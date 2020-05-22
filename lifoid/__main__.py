@@ -28,7 +28,11 @@ from lifoid.plugin import Plugator
 log = logging.getLogger(__name__)
 
 DESCRIPTION = "Management and administration commands for lifoid"
-EPILOG = "If there are any bugs or concerns, submit an issue on Github: https://www.github.com/romaryd/lifoid.git"
+EPILOG = \
+"""
+If there are any bugs or concerns, submit an issue on Github:
+https://www.github.com/romaryd/lifoid.git
+"""
 COMMANDS = [
     InitCommand,
     CliCommand,
