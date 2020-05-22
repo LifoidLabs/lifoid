@@ -34,7 +34,7 @@ def on_message(_client, userdata, mqtt_msg):
             'MQTT {}'.format(mqtt_msg.payload.decode('utf-8'))
         )
         json_loaded = json.loads(mqtt_msg.payload.decode('utf-8'))
-        if (isinstance(json_loaded, dict) and
+        if (isinstance(json_loaded, dict) and \
             json_loaded['message_type'] == CHAT):
             lifoid_msg = LifoidMessage(**json_loaded)
         else:
@@ -49,9 +49,9 @@ def on_message(_client, userdata, mqtt_msg):
         lifoid_obj.logger.error(traceback.format_exc())
 
 
-class MQTTCommand(Command):
-    name = 'mqtt'
-    help = 'talk to lifoid via CLI'
+class MQTTBotCommand(Command):
+    name = 'mqtt_bot'
+    help = 'Launch MQTT Lifoid Bot'
     args = {
         '--host': {
             'metavar': 'ADDR',

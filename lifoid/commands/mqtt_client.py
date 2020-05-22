@@ -34,8 +34,8 @@ def on_message(_client, userdata, msg):
 
 class ChatCommand(Command):
 
-    name = 'chat'
-    help = 'Chat with a lifoid bot via MQTT; A MQTT Broker must be available'
+    name = 'mqtt_client'
+    help = 'Talk to a lifoid MQTT bot'
     args = {
         '--host': {
             'metavar': 'ADDR',
