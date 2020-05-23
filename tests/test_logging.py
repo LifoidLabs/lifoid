@@ -27,7 +27,7 @@ class LoggingMixinTests(unittest.TestCase):
     Simply exercises the methods of the logger.
     """
 
-    @mock.patch('loggingmixin.ServiceLogger.logger')
+    @mock.patch('lifoid.loggingmixin.ServiceLogger.logger')
     def test_log_extra(self, mock_logger):
         """
         Assert that extra (user) is passed to logger
@@ -45,7 +45,7 @@ class LoggingMixinTests(unittest.TestCase):
             message, extra={'user': getpass.getuser()}
         )
 
-    @mock.patch('loggingmixin.ServiceLogger.logger')
+    @mock.patch('lifoid.loggingmixin.ServiceLogger.logger')
     def test_log_debug(self, mock_logger):
         """
         Test the debug logger
@@ -61,7 +61,7 @@ class LoggingMixinTests(unittest.TestCase):
         mock_logger.log.assert_called_with(logging.DEBUG,
                                            message, extra=mock.ANY)
 
-    @mock.patch('loggingmixin.ServiceLogger.logger')
+    @mock.patch('lifoid.loggingmixin.ServiceLogger.logger')
     def test_log_info(self, mock_logger):
         """
         Test the info logger
@@ -77,7 +77,7 @@ class LoggingMixinTests(unittest.TestCase):
         mock_logger.log.assert_called_with(logging.INFO,
                                            message, extra=mock.ANY)
 
-    @mock.patch('loggingmixin.ServiceLogger.logger')
+    @mock.patch('lifoid.loggingmixin.ServiceLogger.logger')
     def test_log_warn(self, mock_logger):
         """
         Test the warn logger
@@ -93,7 +93,7 @@ class LoggingMixinTests(unittest.TestCase):
         mock_logger.log.assert_called_with(logging.WARNING,
                                            message, extra=mock.ANY)
 
-    @mock.patch('loggingmixin.ServiceLogger.logger')
+    @mock.patch('lifoid.loggingmixin.ServiceLogger.logger')
     def test_log_error(self, mock_logger):
         """
         Test the error logger
@@ -109,7 +109,7 @@ class LoggingMixinTests(unittest.TestCase):
         mock_logger.log.assert_called_with(logging.ERROR,
                                            message, extra=mock.ANY)
 
-    @mock.patch('loggingmixin.ServiceLogger.logger')
+    @mock.patch('lifoid.loggingmixin.ServiceLogger.logger')
     def test_log_critical(self, mock_logger):
         """
         Test the critical logger
