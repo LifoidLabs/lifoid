@@ -1,7 +1,7 @@
 import datetime
 import time
 from collections import namedtuple
-from jsonrepo.record import NamedtupleRecord
+from lifoid.data.record import NamedtupleRecord
 from lifoid.loggingmixin import LoggingMixin
 from lifoid.message.message_types import CHAT
 

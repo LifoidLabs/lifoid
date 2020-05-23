@@ -1,7 +1,7 @@
 from collections import namedtuple
 import datetime
-from jsonrepo.repository import Repository
-from jsonrepo.record import NamedtupleRecord
+from lifoid.data.repository import Repository
+from lifoid.data.record import NamedtupleRecord
 from lifoid.action import action
 from lifoid.views import render_view
 from lifoid.automaton import Automaton

@@ -6,7 +6,7 @@ Copyright (C) 2017-2018 Romary Dupuis
 import os
 import binascii
 import json
-from jsonrepo.record import DictRecord
+from lifoid.data.record import DictRecord
 from lifoid.loggingmixin import LoggingMixin
 from lifoid.config import settings
 

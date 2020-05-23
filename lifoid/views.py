@@ -18,8 +18,8 @@ from jinja2 import (Environment, TemplateNotFound, Template,
                     PackageLoader, FileSystemLoader)
 from flask_babel import gettext as flask_gettext
 from flask import render_template as flask_render_template
-from jsonrepo.repository import Repository
-from jsonrepo.record import DictRecord
+from lifoid.data.repository import Repository
+from lifoid.data.record import DictRecord
 from lifoid.config import settings
 from lifoid.message import (LifoidMessage, Attachment, ButtonAction, Option,
                             Table, MenuAction, Chat, Edit)
