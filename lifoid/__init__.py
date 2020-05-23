@@ -15,6 +15,7 @@ from lifoid.renderer.stdout import StdoutRenderer
 from lifoid.config import settings
 from lifoid.bot import Bot
 from lifoid.bot.repository import BotRepository
+from lifoid.message import LifoidMessage
 from lifoid.message.repository import MessageRepository
 from lifoid.plugin import Plugator
 import lifoid.signals as signals
@@ -110,9 +111,10 @@ class Lifoid(LoggingMixin):
             signals.get_bot_conf,
             lifoid_id=self.lifoid_id
         )
-
-    def reply(self, message, reply_id=None, context_id=None):
-        """Handles message and reply.
+    
+    def reply(self, message: LifoidMessage, reply_id=None, context_id=None):
+        """
+        Handles message and reply.
 
         In this method, the following operations are executed.
 

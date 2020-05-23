@@ -1,7 +1,7 @@
 from lifoid import Lifoid
 from lifoid.action import action
 from lifoid.message import LifoidMessage, Chat
-from lifoid.message.message_types import CHAT
+from lifoid.message.message_types import CHAT, TXT
 from lifoid.renderer import Renderer
 from lifoid.views import render_view
 
@@ -26,8 +26,8 @@ class HelloWorldRenderer(Renderer):
         return messages
 
 
-@action(lambda message, context: 'Bob' in message.payload.text and
-        message.message_type == CHAT)
+@action(lambda message, context: message.message_type == TXT and
+        'Bob' in message.payload)
 def hello_bob(render, _message, _context):
     """
     Simply say hello to Bob
@@ -36,8 +36,8 @@ def hello_bob(render, _message, _context):
     return render_view(render, 'hello.yml', context={'name': 'Bob'})
 
 
-@action(lambda message, context: 'John' in message.payload.text and
-        message.message_type == CHAT)
+@action(lambda message, context: message.message_type == CHAT and
+        'John' in message.payload.text)
 def hello_john(render, _message, _context):
     """
     Simply say hello to John
@@ -53,8 +53,8 @@ lifoid = Lifoid(LIFOID_ID, actions=[hello_bob, hello_john],
 # Hello Bob
 resp = lifoid.reply(
     LifoidMessage(
-        payload=Chat(text='I am Bob'),
-        message_type=CHAT
+        payload='I am Bob',
+        message_type=TXT
     )
 )
 # --> hello John
