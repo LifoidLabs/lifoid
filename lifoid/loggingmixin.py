@@ -60,8 +60,8 @@ CONFIGURATION = {
         'rotatedlogfile': {
             'level': os.environ.get('LOGGING_ROTATED_FILE_LEVEL', 'INFO'),
             'class': 'logging.handlers.TimedRotatingFileHandler',
-            'when': 'D',
-            'filename': os.environ.get('LOGGING_FILE', 'ROTATED_LOG'),
+            'when': os.environ.get('LOGGING_ROTATED_FILE_INTERVAL', 'H'),
+            'filename': os.environ.get('LOGGING_ROTATED_FILE', 'ROTATED_LOG'),
             'formatter': 'simple',
         }
     },
