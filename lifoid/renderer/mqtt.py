@@ -18,7 +18,7 @@ class MQTTRenderer(Renderer, LoggingMixin):
         msgs = []
         for msg in self.convert(messages):
             self.logger.info(
-                'Response: {}'.format(json.dumps(namedtuple_asdict(msg))))
+                'Response {}'.format(json.dumps(namedtuple_asdict(msg))))
             msgs.append(
                 {
                     'topic': receiver_id,
