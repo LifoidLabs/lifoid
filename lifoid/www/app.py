@@ -12,7 +12,7 @@ from flask_s3 import FlaskS3
 from flask_babel import Babel
 from flask_cors import CORS
 from commis import color
-from loggingmixin import ServiceLogger
+from lifoid.loggingmixin import ServiceLogger
 from lifoid.constants import HEADER
 from lifoid.config import settings
 from lifoid.www.api.webhook import webhook

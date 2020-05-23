@@ -5,7 +5,7 @@ Copyright (C) 2017-2018-2018 Romary Dupuis
 """
 import boto3
 from lifoid.renderer import Renderer
-from loggingmixin import LoggingMixin
+from lifoid.loggingmixin import LoggingMixin
 from lifoid.utils.asdict import namedtuple_asdict
 
 

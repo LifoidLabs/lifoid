@@ -10,7 +10,6 @@ import sys
 import importlib
 from flask_babel import refresh
 from flask import current_app as app
-from loggingmixin import LoggingMixin
 from awesomedecorators import memoized
 from lifoid.renderer.stdout import StdoutRenderer
 from lifoid.config import settings
@@ -19,6 +18,7 @@ from lifoid.bot.repository import BotRepository
 from lifoid.message.repository import MessageRepository
 from lifoid.plugin import Plugator
 import lifoid.signals as signals
+from lifoid.loggingmixin import LoggingMixin
 
 sys.path.insert(0, os.getcwd())
 
@@ -167,7 +167,6 @@ class Lifoid(LoggingMixin):
         else:
             self.process_actions(message, reply_id, context_id)
 
-        self.logger.warning('No action matched. Define fallback action.')
         return None
 
     def process_actions(self, message, reply_id, context_id):
@@ -194,3 +193,4 @@ class Lifoid(LoggingMixin):
                     '{}:{}'.format(self.lifoid_id, context_id),
                     None, self.context)
                 return output
+        self.logger.warning('No action matched. Define fallback action.')

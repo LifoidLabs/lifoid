@@ -30,8 +30,8 @@ def on_message(_client, userdata, mqtt_msg):
     )
     try:
         # Identify the message type
-        lifoid_obj.logger.debug(
-            'MQTT {}'.format(mqtt_msg.payload.decode('utf-8'))
+        lifoid_obj.logger.info(
+            'Request {}'.format(mqtt_msg.payload.decode('utf-8'))
         )
         json_loaded = json.loads(mqtt_msg.payload.decode('utf-8'))
         if (isinstance(json_loaded, dict) and \

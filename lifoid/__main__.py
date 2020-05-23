@@ -10,7 +10,6 @@
 Definition of the lifoid app and commands
 """
 from importlib import import_module
-import logging
 from commis import color
 from commis import ConsoleProgram
 from lifoid.commands.run import RunCommand
@@ -24,8 +23,6 @@ from lifoid.commands.mqtt_client import MQTTClientCommand
 from lifoid.config import settings
 from lifoid.signals import get_command
 from lifoid.plugin import Plugator
-
-log = logging.getLogger(__name__)
 
 DESCRIPTION = "Management and administration commands for lifoid"
 EPILOG = \

@@ -7,7 +7,7 @@ import os
 import binascii
 import json
 from jsonrepo.record import DictRecord
-from loggingmixin import LoggingMixin
+from lifoid.loggingmixin import LoggingMixin
 from lifoid.config import settings
 
 CTXT_ID_LENGTH = 12

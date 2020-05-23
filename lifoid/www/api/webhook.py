@@ -5,7 +5,7 @@ import traceback
 import importlib
 from flask import request, make_response, Blueprint, abort
 from lifoid.config import settings
-from loggingmixin import ServiceLogger
+from lifoid.loggingmixin import ServiceLogger
 from lifoid.constants import E_GET, E_POST
 from lifoid.events import process_event
 from lifoid.exceptions import (LifoidRequestForbiddenError,

@@ -8,7 +8,7 @@ import warnings
 from six import add_metaclass
 from dotenv import load_dotenv
 from singleton import Singleton
-from loggingmixin import LoggingMixin
+from lifoid.loggingmixin import LoggingMixin
 
 
 class ImproperlyConfigured(Exception):

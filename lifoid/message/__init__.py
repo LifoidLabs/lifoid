@@ -2,7 +2,7 @@ import datetime
 import time
 from collections import namedtuple
 from jsonrepo.record import NamedtupleRecord
-from loggingmixin import LoggingMixin
+from lifoid.loggingmixin import LoggingMixin
 from lifoid.message.message_types import CHAT
 
 _fields = ['date', 'ttl', 'from_user', 'to_user', 'payload',
