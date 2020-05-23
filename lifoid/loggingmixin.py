@@ -70,7 +70,7 @@ CONFIGURATION = {
         '{}'.format(os.environ.get('LOGGING_SERVICE', 'process')): {
             'level': os.environ.get('LOGGING_LEVEL', 'INFO'),
             'handlers': os.environ.get('LOGGING_HANDLERS',
-                                       'console').split(','),
+                                       'null').split(','),
             'propagate': 0,
         }
     },
@@ -81,7 +81,7 @@ if os.environ.get('LOGGING_DEBUG', 'yes') == 'yes':
     logging.captureWarnings(True)
 
 
-class WrappedLogger(object):
+class WrappedLogger:
     """
     Wraps the Python logging module's logger object to ensure that all process
     logging happens with the correct configuration as well as any extra
@@ -178,7 +178,7 @@ class ServiceLogger(WrappedLogger):
         super(ServiceLogger, self).log(level, message, *args, **kwargs)
 
 
-class LoggingMixin(object):
+class LoggingMixin:
     """
     Mix in to classes that need their own logging object!
     """
