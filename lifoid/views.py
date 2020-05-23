@@ -128,7 +128,7 @@ def get_yaml_view(template_name, **kwargs):
         rendered_template = render_template(template_name, **kwargs)
         if rendered_template is None:
             return None
-        content = yaml.load(rendered_template)
+        content = yaml.load(rendered_template, Loader=yaml.FullLoader)
         if 'message_type' in content and content['message_type'] == CHAT:
             payload = content['payload']
             attachments = []

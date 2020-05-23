@@ -36,7 +36,7 @@ class InitCommand(Command):
         h.write('LIFOID_SETTINGS_MODULE={}.settings'.format(name))
         h.write('LOGGING_LEVEL=INFO')
         h.write('LOGGING_SERVICE=lifoid')
-        h.write('LOGGING_HANDLERS=console,logfile')
+        h.write('LOGGING_HANDLERS=console')
         h.write('LOGGING_DEBUG=no')
         h.close()
 

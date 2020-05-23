@@ -55,8 +55,9 @@ class MQTTClientCommand(Command):
         },
         '--lifoid_id': {
             'metavar': 'LIFOID_ID',
-            'required': True,
-            'help': 'unique id of lifoid chatbot'
+            'required': False,
+            'help': 'unique id of lifoid chatbot',
+            'default': 'bot'
         }
     }
 

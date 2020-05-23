@@ -106,6 +106,8 @@ class MQTTChatbot(Automaton):
 
     def get_temperature(self, render, _message):
         data = self.sensor_data.latest('temperature')
+        if data is None:
+            return render_view(render, 'dont_know.yml')
         return render_view(render, 'give_temperature.yml', context=data.value)
 
     def ask_name_counter(self, _render, _message):
@@ -121,15 +123,15 @@ def greeting(render, message, mqtt_bot):
     mqtt_bot.greeting(render, message)
 
 
-@action(lambda message, _: message.from_user != message.lifoid_id and
-        message.message_type == CHAT and
+@action(lambda message, _: message.message_type == CHAT and
+        message.from_user != message.lifoid_id and
         'name' in message.payload.text)
 def user_name(render, message, mqtt_bot):
     mqtt_bot.user_name(render, message)
 
 
-@action(lambda message, _: message.from_user != message.lifoid_id and
-        message.message_type == CHAT and
+@action(lambda message, _: message.message_type == CHAT and
+        message.from_user != message.lifoid_id and
         'temperature' in message.payload.text)
 def query_temperature(render, message, mqtt_bot):
     mqtt_bot.query_temperature(render, message)
@@ -140,3 +142,8 @@ def query_temperature(render, message, mqtt_bot):
         'temperature' in message.topic)
 def temperature_change(render, message, mqtt_bot):
     mqtt_bot.temperature_change(render, message)
+
+
+@action()
+def fallback(render, message, mqtt_bot):
+    mqtt_bot.unknown(render, message)
