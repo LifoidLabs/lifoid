@@ -22,8 +22,7 @@ def action(route_func=None):
         @wraps(func)
         def wrapper(message, context):
             if route_func is None or route_func(message, context):
-                LOGGER.info('Selected action: {}'.format(
-                    color.format(func.__name__, color.YELLOW)))
+                LOGGER.info(f'Selected action: {func.__name__}')
                 return True, func
             return False, None
         return wrapper

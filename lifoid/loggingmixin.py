@@ -11,7 +11,6 @@ import getpass
 import warnings
 from dotenv import load_dotenv
 
-__version__ = '0.1.3'
 ISO8601_DATETIME = "%Y-%m-%dT%H:%M:%S.%s%z"
 
 # Load Environment variables if available
@@ -37,7 +36,7 @@ CONFIGURATION = {
         },
 
         'console': {
-            'level': os.environ.get('LOGGING_CONSOLE_LEVEL', 'DEBUG'),
+            'level': os.environ.get('LOGGING_CONSOLE_LEVEL', 'INFO'),
             'class': 'logging.StreamHandler',
             'formatter': 'simple',
         },
@@ -53,7 +52,7 @@ CONFIGURATION = {
 
     'loggers': {
         '{}'.format(os.environ.get('LOGGING_SERVICE', 'process')): {
-            'level': os.environ.get('LOGGING_LEVEL', 'DEBUG'),
+            'level': os.environ.get('LOGGING_LEVEL', 'INFO'),
             'handlers': os.environ.get('LOGGING_HANDLERS',
                                        'console').split(','),
             'propagate': 0,

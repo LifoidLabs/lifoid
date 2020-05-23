@@ -34,9 +34,10 @@ class InitCommand(Command):
         print(color.format('create .env', color.CYAN))
         h = open(os.path.join(path, '.env'), 'w')
         h.write('LIFOID_SETTINGS_MODULE={}.settings'.format(name))
-        h.write('LOGGING_CONSOLE_LEVEL=INFO')
-        h.write('LOGGING_FILE_LEVEL=INFO')
+        h.write('LOGGING_LEVEL=INFO')
         h.write('LOGGING_SERVICE=lifoid')
+        h.write('LOGGING_HANDLERS=console,logfile')
+        h.write('LOGGING_DEBUG=no')
         h.close()
 
     def make_project_dir(self, path):
