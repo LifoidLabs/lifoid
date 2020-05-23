@@ -30,14 +30,14 @@ def on_message(_client, userdata, mqtt_msg):
     )
     try:
         # Identify the message type
-        lifoid_obj.logger.info(
-            'Request {}'.format(mqtt_msg.payload.decode('utf-8'))
-        )
         json_loaded = json.loads(mqtt_msg.payload.decode('utf-8'))
         if (isinstance(json_loaded, dict) and \
             json_loaded['message_type'] == CHAT):
             lifoid_msg = LifoidMessage(**json_loaded)
             if lifoid_msg.to_user == userdata['lifoid_id']:
+                lifoid_obj.logger.info(
+                    'Request {}'.format(mqtt_msg.payload.decode('utf-8'))
+                )
                 lifoid_obj.reply(lifoid_msg, reply_id=mqtt_msg.topic)
         else:
             lifoid_msg = LifoidMessage(
