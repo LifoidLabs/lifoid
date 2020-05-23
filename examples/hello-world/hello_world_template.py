@@ -12,10 +12,15 @@ LIFOID_ID = 'hello_world'
 class HelloWorldRenderer(Renderer):
     """
     Stdout renderer
+    Depending on the templates you want to use: YAML or TXT
+    you get either messages as Chat objects or raw text
     """
     def render(self, messages, receiver_id):
         for message in self.convert(messages):
-            print('--> {}'.format(message.payload))
+            if isinstance(message.payload, Chat):
+                print('--> {}'.format(message.payload.text))
+            else:
+                print('--> {}'.format(message.payload))
 
     def convert(self, messages):
         return messages
@@ -25,7 +30,8 @@ class HelloWorldRenderer(Renderer):
         message.message_type == CHAT)
 def hello_bob(render, _message, _context):
     """
-    Simply say hello
+    Simply say hello to Bob
+    We are using a YAML template with a Chat object, see ./templates/hello.yml
     """
     return render_view(render, 'hello.yml', context={'name': 'Bob'})
 
@@ -34,7 +40,9 @@ def hello_bob(render, _message, _context):
         message.message_type == CHAT)
 def hello_john(render, _message, _context):
     """
-    Simply say hello
+    Simply say hello to John
+    We are using a TXT template with a raw output text
+    see ./templates/hello.txt
     """
     return render_view(render, 'hello.txt', context={'name': 'John'})
 
@@ -49,7 +57,7 @@ resp = lifoid.reply(
         message_type=CHAT
     )
 )
-# --> {'text': 'hello Bob'}
+# --> hello John
 
 # Hello John
 resp = lifoid.reply(
