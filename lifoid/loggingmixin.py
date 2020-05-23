@@ -24,7 +24,7 @@ CONFIGURATION = {
 
     'formatters': {
         'simple': {
-            'format': '%(name)s %(user)s %(levelname)s [%(asctime)s] -- %(message)s',
+            'format': '%(name)s\t%(user)s\t%(levelname)s\t[%(asctime)s]\t%(message)s',
             'datefmt': ISO8601_DATETIME,
         }
     },
@@ -41,11 +41,27 @@ CONFIGURATION = {
             'formatter': 'simple',
         },
 
+        'debug': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.environ.get('LOGGING_DEBUG_FILE', 'DEBUG'),
+            'maxBytes': 536870912,  # 512 MB
+            'formatter': 'simple',
+        },
+
         'logfile': {
             'level': os.environ.get('LOGGING_FILE_LEVEL', 'INFO'),
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': os.environ.get('LOGGING_FILE', 'LOG'),
             'maxBytes': 536870912,  # 512 MB
+            'formatter': 'simple',
+        },
+
+        'rotatedlogfile': {
+            'level': os.environ.get('LOGGING_ROTATED_FILE_LEVEL', 'INFO'),
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'when': 'D',
+            'filename': os.environ.get('LOGGING_FILE', 'ROTATED_LOG'),
             'formatter': 'simple',
         }
     },
