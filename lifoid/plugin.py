@@ -5,7 +5,7 @@ Copyright (C) 2017-2018 Romary Dupuis
 """
 import sys
 from six import add_metaclass, string_types
-from lifoid.loggingmixin import LoggingMixin
+from lifoid.logging.mixin import LoggingMixin
 from singleton import Singleton
 import lifoid.signals as signals
 

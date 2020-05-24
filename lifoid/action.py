@@ -5,7 +5,7 @@
 # Copyright (C) 2017-2018 Romary Dupuis
 from functools import wraps as wraps
 from commis import color
-from lifoid.loggingmixin import ServiceLogger
+from lifoid.logging.mixin import ServiceLogger
 
 LOGGER = ServiceLogger()
 

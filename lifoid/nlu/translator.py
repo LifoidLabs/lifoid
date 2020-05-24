@@ -3,7 +3,7 @@ Translator definition
 Author:   Romary Dupuis <romary@me.com>
 Copyright (C) 2018 Romary Dupuis
 """
-from lifoid.loggingmixin import LoggingMixin
+from lifoid.logging.mixin import LoggingMixin
 
 
 class Translator(lifoid.loggingmixin):

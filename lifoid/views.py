@@ -24,7 +24,7 @@ from lifoid.config import settings
 from lifoid.message import (LifoidMessage, Attachment, ButtonAction, Option,
                             Table, MenuAction, Chat, Edit)
 from lifoid.message.message_types import CHAT
-from lifoid.loggingmixin import ServiceLogger
+from lifoid.logging.mixin import ServiceLogger
 logger = ServiceLogger()
 
 MSG_SPLIT = '1234567890ab'

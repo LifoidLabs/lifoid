@@ -2,7 +2,7 @@ import datetime
 import time
 from collections import namedtuple
 from lifoid.data.record import NamedtupleRecord
-from lifoid.loggingmixin import LoggingMixin
+from lifoid.logging.mixin import LoggingMixin
 from lifoid.message.message_types import CHAT, TXT
 
 _fields = ['date', 'ttl', 'from_user', 'to_user', 'payload',

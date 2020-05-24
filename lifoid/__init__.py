@@ -19,7 +19,7 @@ from lifoid.message import LifoidMessage
 from lifoid.message.repository import MessageRepository
 from lifoid.plugin import Plugator
 import lifoid.signals as signals
-from lifoid.loggingmixin import LoggingMixin
+from lifoid.logging.mixin import LoggingMixin
 
 sys.path.insert(0, os.getcwd())
 
@@ -111,7 +111,7 @@ class Lifoid(LoggingMixin):
             signals.get_bot_conf,
             lifoid_id=self.lifoid_id
         )
-    
+
     def reply(self, message: LifoidMessage, reply_id=None, context_id=None):
         """
         Handles message and reply.

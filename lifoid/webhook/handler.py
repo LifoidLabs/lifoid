@@ -7,7 +7,7 @@ import datetime
 from multiprocessing import Process
 from six import add_metaclass
 from singleton import Singleton
-from lifoid.loggingmixin import LoggingMixin
+from lifoid.logging.mixin import LoggingMixin
 from lifoid import Lifoid
 from lifoid.message.message_types import CHAT
 from lifoid.message import LifoidMessage, Chat
@@ -15,7 +15,7 @@ from lifoid.constants import E_POST
 from lifoid.webhook.renderer import Renderer
 from lifoid.exceptions import LifoidRequestForbiddenError
 from lifoid.auth import get_user
-from lifoid.loggingmixin import ServiceLogger
+from lifoid.logging.mixin import ServiceLogger
 logger = ServiceLogger()
 
 

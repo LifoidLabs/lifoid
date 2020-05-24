@@ -7,7 +7,7 @@ Copyright (C) 2017 Romary Dupuis
 import os
 import json
 import redis
-from lifoid.loggingmixin import LoggingMixin
+from lifoid.logging.mixin import LoggingMixin
 from awesomedecorators import memoized
 from lifoid.data.backend import Backend
 

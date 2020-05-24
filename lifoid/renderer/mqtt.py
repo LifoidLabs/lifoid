@@ -1,5 +1,5 @@
 import json
-from lifoid.loggingmixin import LoggingMixin
+from lifoid.logging.mixin import LoggingMixin
 from paho.mqtt.publish import multiple
 from lifoid.utils.asdict import namedtuple_asdict
 from lifoid.renderer import Renderer

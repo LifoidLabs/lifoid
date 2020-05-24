@@ -5,7 +5,7 @@ import traceback
 import json
 from decimal import Decimal
 from flask import Blueprint, request, make_response, jsonify, abort
-from lifoid.loggingmixin import ServiceLogger
+from lifoid.logging.mixin import ServiceLogger
 from lifoid.message.repository import MessageRepository
 from lifoid.utils.asdict import namedtuple_asdict
 from lifoid.auth import get_user

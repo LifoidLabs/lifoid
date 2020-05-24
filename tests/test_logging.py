@@ -7,7 +7,7 @@ Credits: Benjamin Bengfort <benjamin@bengfort.com>
 import unittest
 import getpass
 import logging
-from lifoid.loggingmixin import ServiceLogger
+from lifoid.logging.mixin import ServiceLogger
 
 try:
     from unittest import mock

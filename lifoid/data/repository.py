@@ -6,7 +6,7 @@ Copyright (C) 2017 Romary Dupuis
 """
 from six import add_metaclass
 from singleton import Singleton
-from lifoid.loggingmixin import LoggingMixin
+from lifoid.logging.mixin import LoggingMixin
 from lifoid.data.mixin import StorageMixin
 from lifoid.data.record import Record
 
