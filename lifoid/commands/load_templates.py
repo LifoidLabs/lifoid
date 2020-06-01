@@ -9,11 +9,17 @@ from commis import Command, color
 from lifoid.views import (TemplateRepository, TemplateRecord,
                           load_templates_path)
 from lifoid.config import settings
+from lifoid.plugin import plugator
+import lifoid.signals as signals
 
 
 def load_template(lifoid_id, path, lang):
-    template_rep = TemplateRepository(settings.repository,
-                                      settings.template_prefix)
+    template_rep = TemplateRepository(
+        plugator.get_plugin(
+            signals.get_backend
+        ),
+        settings.template_prefix
+    )
     for template in load_templates_path(path):
         record = TemplateRecord()
         record.update(template)

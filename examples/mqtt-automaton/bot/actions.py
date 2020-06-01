@@ -2,6 +2,7 @@ from collections import namedtuple
 import datetime
 from lifoid.data.repository import Repository
 from lifoid.data.record import NamedtupleRecord
+from lifoid.data.memory import DictBackend
 from lifoid.action import action
 from lifoid.views import render_view
 from lifoid.automaton import Automaton
@@ -19,7 +20,8 @@ TRANSITIONS = [
     },
     {
         'trigger': 'greeting', 'source': 'ready',
-        'dest': 'ask_name', 'conditions': ['user_unknown'],
+        'dest': 'ask_name',
+        'conditions': ['user_unknown'],
         'after': ['say_hello', 'ask_name']
     },
     {
@@ -29,7 +31,8 @@ TRANSITIONS = [
     },
     {
         'trigger': 'unknown', 'source': 'ask_name',
-        'dest': '=', 'conditions': ['ask_name_counter'],
+        'dest': '=',
+        'conditions': ['ask_name_counter'],
         'after': ['ask_name']
     },
     {
@@ -79,7 +82,7 @@ class MQTTChatbot(Automaton):
         self.states = STATES
         self.transitions = TRANSITIONS
         self.initial = 'ready'
-        self.sensor_data = SensorDataRepository(settings.repository,
+        self.sensor_data = SensorDataRepository(DictBackend,
                                                 'sensor-data')
         super(MQTTChatbot, self).__init__(lifoid_id)
 

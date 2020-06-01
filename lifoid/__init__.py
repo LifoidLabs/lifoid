@@ -17,7 +17,7 @@ from lifoid.bot import Bot
 from lifoid.bot.repository import BotRepository
 from lifoid.message import LifoidMessage
 from lifoid.message.repository import MessageRepository
-from lifoid.plugin import Plugator
+from lifoid.plugin import plugator
 import lifoid.signals as signals
 from lifoid.logging.mixin import LoggingMixin
 
@@ -42,9 +42,21 @@ class Lifoid(LoggingMixin):
         self.lang = lang
         self.app_settings_module = None
         self.router_module = None
-        self.plugins = plugins
-        self.plugins_path = plugins_path
         self.context = None
+
+        self.init_settings_module()
+
+        self.init_plugins(plugins, plugins_path)
+
+        self.renderer = renderer
+
+        self.init_routing(actions)
+        self.init_context_model(bot_model)
+
+        self.logger.debug('Bot Type: {}'.format(self.bot_model))
+        signals.initialized.send(self)
+
+    def init_settings_module(self):
         try:
             self.app_settings_module = importlib.import_module(
                 settings.lifoid_settings_module
@@ -53,18 +65,19 @@ class Lifoid(LoggingMixin):
                 self.app_settings_module.ROUTER_CONF
             )
         except ImportError:
-            self.logger.warning('no settings configured')
-        self.context_rep = BotRepository(settings.repository,
-                                         settings.context_prefix)
-        self.message_rep = MessageRepository(settings.repository,
-                                             settings.message_prefix)
+            self.logger.debug('no settings configured')
 
-        self.renderer = renderer
-
-        self.init_routing(actions)
-        self.init_context_model(bot_model)
-        self.logger.debug('Bot Type: {}'.format(self.bot_model))
-        signals.initialized.send(self)
+    def init_plugins(self, plugins, plugins_path):
+        if self.app_settings_module is not None:
+            for path in self.app_settings_module.PLUGIN_PATHS:
+                plugator.add_plugin_path(path)
+            for plugin in self.app_settings_module.PLUGINS:
+                plugator.add_plugin(plugin)
+        if plugins is not None:
+            for path in plugins_path:
+                plugator.add_plugin_path(path)
+            for plugin in plugins:
+                plugator.add_plugin(plugin)
 
     def init_routing(self, actions):
         if actions is None:
@@ -80,34 +93,33 @@ class Lifoid(LoggingMixin):
             self.bot_model = bot_model
         self.context = None
 
-    def init_plugins(self, plugins, plugins_path):
-        if plugins is None:
-            if self.app_settings_module is not None:
-                self.plugins = self.app_settings_module.PLUGINS
-                self.plugins_path = self.app_settings_module.PLUGIN_PATHS
-        else:
-            self.plugins = plugins
-            if plugins_path is not None:
-                self.plugins_path = plugins_path
+    @memoized
+    def backend(self):
+        return plugator.get_plugin(
+            signals.get_backend
+        )
 
     @memoized
-    def plugator(self):
-        return Plugator(
-            self.plugins,
-            self.plugins_path,
-            settings)
+    def context_rep(self):
+        return BotRepository(self.backend,
+                             settings.context_prefix)
+
+    @memoized
+    def message_rep(self):
+        return BotRepository(self.backend,
+                             settings.message_prefix)
 
     @memoized
     def parser(self):
-        return self.plugator.get_plugin(signals.get_parser)
+        return plugator.get_plugin(signals.get_parser)
 
     @memoized
     def translator(self):
-        return self.plugator.get_plugin(signals.get_translator)
+        return plugator.get_plugin(signals.get_translator)
 
     @memoized
     def bot_conf(self):
-        return self.plugator.get_plugin(
+        return plugator.get_plugin(
             signals.get_bot_conf,
             lifoid_id=self.lifoid_id
         )

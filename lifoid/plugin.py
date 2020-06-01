@@ -8,43 +8,48 @@ from six import add_metaclass, string_types
 from lifoid.logging.mixin import LoggingMixin
 from singleton import Singleton
 import lifoid.signals as signals
+from lifoid.config import settings
 
 
 @add_metaclass(Singleton)
 class Plugator(LoggingMixin):
-    def __init__(self, plugins, plugins_paths, conf):
-        self._plugins_paths = plugins_paths
+    def __init__(self):
+        self._plugins_paths = []
         self._plugins = []
-        self.logger.debug('Temporarily adding PLUGIN_PATHS to system path')
-        _sys_path = sys.path[:]
-        self.init_paths(plugins_paths)
-        self.init_plugins(plugins)
-        self.logger.debug('Restoring system path')
-        sys.path = _sys_path
-        signals.get_conf.send(conf)
 
-    def init_paths(self, plugins_paths):
-        if self._plugins_paths is not None:
-            for pluginpath in self._plugins_paths:
-                sys.path.insert(0, pluginpath)
+    def add_plugin_path(self, plugin_path):
+        if plugin_path not in self._plugins_paths:
+            self.logger.debug(f'add_plugin_path\t{plugin_path}')
+            self._plugins_paths.append(plugin_path)
+            sys.path.insert(0, plugin_path)
 
-    def init_plugins(self, plugins):
-        if plugins is not None:
-            for plugin in plugins:
-                # if it's a string, then import it
-                if isinstance(plugin, string_types):
-                    self.logger.debug("Loading plugin `%s`", plugin)
-                    try:
-                        plugin = __import__(plugin, globals(), locals(),
-                                            str('module'))
-                    except ImportError as e:
-                        self.logger.error(
-                            "Cannot load plugin `%s`\n%s", plugin, e)
-                        continue
-
+    def add_plugin(self, plugin):
+        if isinstance(plugin, string_types):
+            self.logger.debug(f'add_plugin_path\t{plugin}')
+            try:
+                plugin = __import__(plugin, globals(), locals(),
+                                    str('module'))
                 self.logger.debug("Registering plugin `%s`", plugin.__name__)
                 plugin.register()
                 self._plugins.append(plugin)
+                self.logger.debug('Get plugin configuration')
+                signals.get_conf.send(settings)
+            except ImportError as e:
+                self.logger.error(
+                    "Cannot load plugin `%s`\n%s", plugin, e)
+
+    def _init_paths(self, plugins_paths):
+        for plugin_path in plugins_paths:
+            self.add_plugin_path(plugin_path)
+
+    def _init_plugins(self, plugins):
+        if plugins is not None:
+            for plugin in plugins:
+                self.add_plugin(plugin)
+
+    def register_plugin(self, plugin, plugin_path):
+        self.add_plugin_path(plugin_path)
+        self.add_plugin_path(plugin)
 
     def get_plugins(self, plugin, *args, **kwargs):
         return [w for (_, w) in plugin.send(*args, **kwargs)]
@@ -63,3 +68,17 @@ class Plugator(LoggingMixin):
                     '%s plugins found, using only first one: %s',
                     plugins_found, plugin)
             return plugin
+
+
+def init_plugins(self, plugins, plugins_path):
+    if plugins is None:
+        if self.app_settings_module is not None:
+            self.plugins = self.app_settings_module.PLUGINS
+            self.plugins_path = self.app_settings_module.PLUGIN_PATHS
+    else:
+        self.plugins = plugins
+        if plugins_path is not None:
+            self.plugins_path = plugins_path
+
+
+plugator = Plugator()

@@ -21,6 +21,8 @@ from flask import render_template as flask_render_template
 from lifoid.data.repository import Repository
 from lifoid.data.record import DictRecord
 from lifoid.config import settings
+from lifoid.plugin import plugator
+import lifoid.signals as signals
 from lifoid.message import (LifoidMessage, Attachment, ButtonAction, Option,
                             Table, MenuAction, Chat, Edit)
 from lifoid.message.message_types import CHAT
@@ -92,7 +94,9 @@ def get_template(lifoid_id, name, lang):
     template_key = '{}:{}:{}'.format(lifoid_id, name, lang)
     logger.debug('Get template {}'.format(template_key))
     template = TemplateRepository(
-        settings.repository,
+        plugator.get_plugin(
+            signals.get_backend
+        ),
         settings.template_prefix).latest(template_key)
     if template is None:
         logger.error('Get template {}'.format(template_key))

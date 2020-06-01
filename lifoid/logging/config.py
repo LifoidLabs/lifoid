@@ -27,7 +27,7 @@ CONFIGURATION = {
         },
 
         'console': {
-            'level': os.environ.get('LOGGING_CONSOLE_LEVEL', 'INFO'),
+            'level': os.environ.get('LOGGING_CONSOLE_LEVEL', 'ERROR'),
             'class': 'logging.StreamHandler',
             'formatter': 'simple',
         },
@@ -59,7 +59,7 @@ CONFIGURATION = {
 
     'loggers': {
         '{}'.format(os.environ.get('LOGGING_SERVICE', 'process')): {
-            'level': os.environ.get('LOGGING_LEVEL', 'INFO'),
+            'level': os.environ.get('LOGGING_LEVEL', 'DEBUG'),
             'handlers': os.environ.get('LOGGING_HANDLERS',
                                        'null').split(','),
             'propagate': 0,

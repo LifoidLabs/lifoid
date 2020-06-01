@@ -5,9 +5,10 @@ Author:   Romary Dupuis <romary@me.com>
 Copyright (C) 2017 Romary Dupuis
 """
 import json
-from lifoid.logging.mixin import LoggingMixin
 from awesomedecorators import memoized
+from lifoid.logging.mixin import LoggingMixin
 from lifoid.data.backend import Backend
+from lifoid import signals
 
 CACHE = {}
 
@@ -121,3 +122,11 @@ class DictBackend(Backend, LoggingMixin):
                 'items': res
             }
         return {'count': 0, 'items': []}
+
+
+def get_backend(app):
+    return DictBackend
+
+
+def register():
+    signals.get_backend.connect(get_backend)

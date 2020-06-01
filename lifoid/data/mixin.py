@@ -5,11 +5,10 @@ Author:   Romary Dupuis <romary@me.com>
 Copyright (C) 2017 Romary Dupuis
 """
 from awesomedecorators import memoized
-from lifoid.data.backends.redis import RedisBackend
-from lifoid.data.backends.memory import DictBackend
+from lifoid.logging.mixin import LoggingMixin
 
 
-class StorageMixin(object):
+class StorageMixin:
     """
     Mix in storage capacity with singleton
     """
@@ -18,6 +17,10 @@ class StorageMixin(object):
         """
         Instantiates and returns a storage instance
         """
-        if self.backend == 'redis':
-            return RedisBackend(self.prefix, self.secondary_indexes)
-        return DictBackend(self.prefix, self.secondary_indexes)
+        self.logger.debug(f'backend\t{self.backend}')
+        self.logger.debug(f'prefix\t{self.prefix}')
+        self.logger.debug(f'secondary_indexes\t{self.secondary_indexes}')
+        return self.backend(
+            self.prefix,
+            self.secondary_indexes
+        )

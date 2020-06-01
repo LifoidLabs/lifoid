@@ -135,7 +135,6 @@ class LifoidConfiguration(Configuration, LoggingMixin):
 
     # Database backends
     templates = environ_setting('TEMPLATES', 'fs', required=False)
-    repository = environ_setting('REPOSITORY', 'dict', required=False)
     key = environ_setting('BACKEND_KEY', 'key', required=False)
     sort_key = environ_setting('BACKEND_SORT_KEY', 'date', required=False)
     context_prefix = environ_setting('CONTEXT_PREFIX',
