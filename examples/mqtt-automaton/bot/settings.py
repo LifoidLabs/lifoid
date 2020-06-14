@@ -8,6 +8,5 @@ TESTS_PATH = os.path.join(PROJECT_ROOT, 'tests')
 PLUGIN_PATHS = []
 PLUGINS = [
     'lifoid.client_auth',
-    'lifoid.webhook',
     'lifoid.data.memory'
 ]
