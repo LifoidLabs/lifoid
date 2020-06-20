@@ -10,7 +10,7 @@ Make sure there is a MQTT Broker available, e.g. Mosquitto.
 Here is an example to launch the bot with a local MQTT broker:
 
 ```
-lifoid mqtt --host localhost --port 1883 --lifoid_id simple-bot
+lifoid mqtt_bot --host localhost --port 1883 --lifoid_id simple-bot
 ```
 
 In a separate terminal use `mosquitto_pub` tool to simulate information sent
@@ -23,7 +23,7 @@ mosquitto_pub -t temperature -m 27.3
 Then let's chat with this bot:
 
 ```
-lifoid chat --host localhost --port 1883 --lifoid_id simple-bot
+lifoid mqtt_client --host localhost --port 1883 --lifoid_id simple-bot
 +-----------------------------------------------------------------------------+
 |                                                                             |
 |   Lifoid                                                                    |
