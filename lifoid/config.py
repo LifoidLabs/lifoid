@@ -117,6 +117,14 @@ class ServerConfiguration(Configuration):
     port = int(environ_setting('SERVER_PORT', 8888, required=False))
 
 
+class MQTTConfiguration(Configuration):
+    """
+    Configuration for the web server to run an admin UI.
+    """
+    host = environ_setting('MQTT_HOST', 'localhost', required=False)
+    port = int(environ_setting('MQTT_PORT', 1883, required=False))
+
+
 class LifoidConfiguration(Configuration, LoggingMixin):
     """
     Meaningful defaults and required configurations.
@@ -129,6 +137,7 @@ class LifoidConfiguration(Configuration, LoggingMixin):
                                              'bot.settings',
                                              required=False)
     server = ServerConfiguration()
+    mqtt = MQTTConfiguration()
 
     # Authentication
     dev_auth = environ_setting('DEV_AUTH', 'no', required=False)

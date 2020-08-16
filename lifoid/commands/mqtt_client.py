@@ -8,6 +8,7 @@ import json
 from commis import Command, color
 import paho.mqtt.client as mqtt
 from lifoid.constants import HEADER
+from lifoid.config import settings
 
 
 # The callback for when the client receives a CONNACK response from the server.
@@ -37,17 +38,6 @@ class MQTTClientCommand(Command):
     name = 'mqtt_client'
     help = 'Talk to a lifoid MQTT bot'
     args = {
-        '--host': {
-            'metavar': 'ADDR',
-            'default': 'localhost',
-            'help': 'set the mqtt broker host'
-        },
-        '--port': {
-            'metavar': 'PORT',
-            'type': int,
-            'default': 1883,
-            'help': 'set the mqtt broker port'
-        },
         '--debug': {
             'action': 'store_true',
             'required': False,
@@ -75,7 +65,7 @@ class MQTTClientCommand(Command):
         mqtt_client.on_connect = on_connect
         mqtt_client.on_message = on_message
 
-        mqtt_client.connect(args.host, args.port, 60)
+        mqtt_client.connect(settings.mqtt.host, settings.mqtt.port, 60)
 
         mqtt_client.loop_start()
         print(HEADER)

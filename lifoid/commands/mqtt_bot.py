@@ -7,6 +7,7 @@ from lifoid.constants import HEADER
 from lifoid.message import LifoidMessage
 from lifoid.message.message_types import CHAT, M2M
 from lifoid.renderer.mqtt import MQTTRenderer
+from lifoid.config import settings
 
 
 # The callback for when the client receives a CONNACK response from the server.
@@ -55,17 +56,6 @@ class MQTTBotCommand(Command):
     name = 'mqtt_bot'
     help = 'Launch MQTT Lifoid Bot'
     args = {
-        '--host': {
-            'metavar': 'ADDR',
-            'default': 'localhost',
-            'help': 'set the mqtt broker host'
-        },
-        '--port': {
-            'metavar': 'PORT',
-            'type': int,
-            'default': 1883,
-            'help': 'set the mqtt broker port'
-        },
         '--debug': {
             'action': 'store_true',
             'required': False,
@@ -89,7 +79,7 @@ class MQTTBotCommand(Command):
             mqtt_client.on_connect = on_connect
             mqtt_client.on_message = on_message
 
-            mqtt_client.connect(args.host, args.port, 60)
+            mqtt_client.connect(settings.mqtt.host, settings.mqtt.port, 60)
 
             mqtt_client.loop_forever()
         except KeyboardInterrupt:
