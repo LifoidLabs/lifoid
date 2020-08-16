@@ -22,8 +22,8 @@ class Repository(StorageMixin, LoggingMixin):
     secondary_indexes = []
 
     def __init__(self, backend, prefix):
-        self.prefix = prefix
         self.backend = backend
+        self.prefix = prefix
 
     def storage_get(self, key, sort_key):
         return self.storage.get(key, sort_key)
