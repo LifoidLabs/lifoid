@@ -13,7 +13,7 @@ EMAIL = 'romary@me.com'
 MAINTAINER = 'Romary Dupuis'
 MAINTAINER_EMAIL = EMAIL
 LICENSE = 'Apache 2.0'
-REPOSITORY = 'https://github.com/romaryd/lifoid'
+REPOSITORY = 'https://github.com/LifoidLabs/lifoid'
 PACKAGE = 'lifoid'
 
 KEYWORDS = ('chatbot', 'lifoid', 'AI', 'framework')
@@ -82,27 +82,7 @@ CONFIG = {
     'author_email': EMAIL,
     'maintainer': MAINTAINER,
     'maintainer_email': MAINTAINER_EMAIL,
-    'install_requires': [
-        'six',
-        'python-singleton',
-        'python-awesome-decorators',
-        'python-dateutil',
-        'python-jsonrepo',
-        'dateparser',
-        'python-dotenv',
-        'commis',
-        'colorama',
-        'werkzeug',
-        'flask',
-        'flask_s3',
-        'Flask-Babel',
-        'flask-cors',
-        'requests',
-        'transitions',
-        'PyYAML',
-        'blinker',
-        'paho-mqtt'
-    ],
+    'install_requires': get_requires(),
     'description': DESCRIPTION,
     'long_description': read('README.md'),
     'packages': PACKAGES,

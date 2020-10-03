@@ -1,8 +1,9 @@
 import json
-from loggingmixin import LoggingMixin
+from lifoid.logging.mixin import LoggingMixin
 from paho.mqtt.publish import multiple
 from lifoid.utils.asdict import namedtuple_asdict
 from lifoid.renderer import Renderer
+from lifoid.config import settings
 
 
 class MQTTRenderer(Renderer, LoggingMixin):
@@ -17,12 +18,12 @@ class MQTTRenderer(Renderer, LoggingMixin):
     def render(self, messages, receiver_id):
         msgs = []
         for msg in self.convert(messages):
-            self.logger.debug(
-                'MQTT Response: {}'.format(json.dumps(namedtuple_asdict(msg))))
+            self.logger.info(
+                'Response {}'.format(json.dumps(namedtuple_asdict(msg))))
             msgs.append(
                 {
                     'topic': receiver_id,
                     'payload': json.dumps(namedtuple_asdict(msg))
                 }
             )
-        multiple(msgs, hostname="localhost")
+        multiple(msgs, hostname=settings.mqtt.host, port=settings.mqtt.port)

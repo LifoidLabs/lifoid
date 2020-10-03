@@ -5,7 +5,7 @@ import traceback
 import importlib
 from flask import request, make_response, Blueprint, abort
 from lifoid.config import settings
-from loggingmixin import ServiceLogger
+from lifoid.logging.mixin import ServiceLogger
 from lifoid.constants import E_GET, E_POST
 from lifoid.events import process_event
 from lifoid.exceptions import (LifoidRequestForbiddenError,
@@ -45,7 +45,7 @@ def index():
         else:
             return make_response('Request method not supported', 404)
         logger.debug('{} {}'.format(e_type, event))
-        asynchronous = settings.async == 'yes'
+        asynchronous = settings.pasync == 'yes'
         resp, perf = process_event(e_type, event, asynchronous)
         logger.info('Request processed in {}'.format(perf))
         if resp is not None:

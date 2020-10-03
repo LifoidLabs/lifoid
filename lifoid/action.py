@@ -5,7 +5,7 @@
 # Copyright (C) 2017-2018 Romary Dupuis
 from functools import wraps as wraps
 from commis import color
-from loggingmixin import ServiceLogger
+from lifoid.logging.mixin import ServiceLogger
 
 LOGGER = ServiceLogger()
 
@@ -22,8 +22,7 @@ def action(route_func=None):
         @wraps(func)
         def wrapper(message, context):
             if route_func is None or route_func(message, context):
-                LOGGER.debug('Selected action: {}'.format(
-                    color.format(func.__name__, color.YELLOW)))
+                LOGGER.info(f'Action {func.__name__}')
                 return True, func
             return False, None
         return wrapper

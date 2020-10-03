@@ -10,15 +10,16 @@ import sys
 import importlib
 from flask_babel import refresh
 from flask import current_app as app
-from loggingmixin import LoggingMixin
 from awesomedecorators import memoized
 from lifoid.renderer.stdout import StdoutRenderer
 from lifoid.config import settings
 from lifoid.bot import Bot
 from lifoid.bot.repository import BotRepository
+from lifoid.message import LifoidMessage
 from lifoid.message.repository import MessageRepository
-from lifoid.plugin import Plugator
+from lifoid.plugin import plugator
 import lifoid.signals as signals
+from lifoid.logging.mixin import LoggingMixin
 
 sys.path.insert(0, os.getcwd())
 
@@ -41,9 +42,21 @@ class Lifoid(LoggingMixin):
         self.lang = lang
         self.app_settings_module = None
         self.router_module = None
-        self.plugins = plugins
-        self.plugins_path = plugins_path
         self.context = None
+
+        self.init_settings_module()
+
+        self.init_plugins(plugins, plugins_path)
+
+        self.renderer = renderer
+
+        self.init_routing(actions)
+        self.init_context_model(bot_model)
+
+        self.logger.debug('Bot Type: {}'.format(self.bot_model))
+        signals.initialized.send(self)
+
+    def init_settings_module(self):
         try:
             self.app_settings_module = importlib.import_module(
                 settings.lifoid_settings_module
@@ -52,18 +65,19 @@ class Lifoid(LoggingMixin):
                 self.app_settings_module.ROUTER_CONF
             )
         except ImportError:
-            self.logger.warning('no settings configured')
-        self.context_rep = BotRepository(settings.repository,
-                                         settings.context_prefix)
-        self.message_rep = MessageRepository(settings.repository,
-                                             settings.message_prefix)
+            self.logger.debug('no settings configured')
 
-        self.renderer = renderer
-
-        self.init_routing(actions)
-        self.init_context_model(bot_model)
-        self.logger.debug('Bot Type: {}'.format(self.bot_model))
-        signals.initialized.send(self)
+    def init_plugins(self, plugins, plugins_path):
+        if self.app_settings_module is not None:
+            for path in self.app_settings_module.PLUGIN_PATHS:
+                plugator.add_plugin_path(path)
+            for plugin in self.app_settings_module.PLUGINS:
+                plugator.add_plugin(plugin)
+        if plugins is not None:
+            for path in plugins_path:
+                plugator.add_plugin_path(path)
+            for plugin in plugins:
+                plugator.add_plugin(plugin)
 
     def init_routing(self, actions):
         if actions is None:
@@ -79,40 +93,41 @@ class Lifoid(LoggingMixin):
             self.bot_model = bot_model
         self.context = None
 
-    def init_plugins(self, plugins, plugins_path):
-        if plugins is None:
-            if self.app_settings_module is not None:
-                self.plugins = self.app_settings_module.PLUGINS
-                self.plugins_path = self.app_settings_module.PLUGIN_PATHS
-        else:
-            self.plugins = plugins
-            if plugins_path is not None:
-                self.plugins_path = plugins_path
+    @memoized
+    def backend(self):
+        return plugator.get_plugin(
+            signals.get_backend
+        )
 
     @memoized
-    def plugator(self):
-        return Plugator(
-            self.plugins,
-            self.plugins_path,
-            settings)
+    def context_rep(self):
+        BotRepository.klass = self.bot_model
+        return BotRepository(self.backend,
+                             settings.context_prefix)
+
+    @memoized
+    def message_rep(self):
+        return MessageRepository(self.backend,
+                                 settings.message_prefix)
 
     @memoized
     def parser(self):
-        return self.plugator.get_plugin(signals.get_parser)
+        return plugator.get_plugin(signals.get_parser)
 
     @memoized
     def translator(self):
-        return self.plugator.get_plugin(signals.get_translator)
+        return plugator.get_plugin(signals.get_translator)
 
     @memoized
     def bot_conf(self):
-        return self.plugator.get_plugin(
+        return plugator.get_plugin(
             signals.get_bot_conf,
             lifoid_id=self.lifoid_id
         )
 
-    def reply(self, message, reply_id=None, context_id=None):
-        """Handles message and reply.
+    def reply(self, message: LifoidMessage, reply_id=None, context_id=None):
+        """
+        Handles message and reply.
 
         In this method, the following operations are executed.
 
@@ -123,10 +138,8 @@ class Lifoid(LoggingMixin):
         """
         if context_id is None:
             context_id = reply_id
-        self.context = self.context_rep.get(
+        self.context = self.context_rep.latest(
             '{}:{}'.format(self.lifoid_id, context_id),
-            None,
-            klass=self.bot_model,
             lifoid_id=self.lifoid_id
         )
 
@@ -136,7 +149,7 @@ class Lifoid(LoggingMixin):
 
         self.context['__lang__'] = self.lang
 
-        if settings.async == 'no' and settings.templates == 'flask':
+        if settings.pasync == 'no' and settings.templates == 'flask':
             try:
                 from lifoid.www.app import app
                 with app.app_context():
@@ -167,7 +180,6 @@ class Lifoid(LoggingMixin):
         else:
             self.process_actions(message, reply_id, context_id)
 
-        self.logger.warning('No action matched. Define fallback action.')
         return None
 
     def process_actions(self, message, reply_id, context_id):
@@ -192,5 +204,7 @@ class Lifoid(LoggingMixin):
                 output = action(render, message, self.context)
                 self.context_rep.save(
                     '{}:{}'.format(self.lifoid_id, context_id),
-                    None, self.context)
+                    message.date,
+                    self.context)
                 return output
+        self.logger.warning('No action matched. Define fallback action.')

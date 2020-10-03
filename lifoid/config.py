@@ -8,7 +8,7 @@ import warnings
 from six import add_metaclass
 from dotenv import load_dotenv
 from singleton import Singleton
-from loggingmixin import LoggingMixin
+from lifoid.logging.mixin import LoggingMixin
 
 
 class ImproperlyConfigured(Exception):
@@ -117,25 +117,33 @@ class ServerConfiguration(Configuration):
     port = int(environ_setting('SERVER_PORT', 8888, required=False))
 
 
+class MQTTConfiguration(Configuration):
+    """
+    Configuration for the web server to run an admin UI.
+    """
+    host = environ_setting('MQTT_HOST', 'localhost', required=False)
+    port = int(environ_setting('MQTT_PORT', 1883, required=False))
+
+
 class LifoidConfiguration(Configuration, LoggingMixin):
     """
     Meaningful defaults and required configurations.
     """
     # Main
     debug = False
-    lifoid_id = environ_setting('LIFOID_ID', 'agent', required=False)
+    lifoid_id = environ_setting('LIFOID_ID', 'bot', required=False)
     lifoid_name = environ_setting('LIFOID_NAME', 'Bot', required=False)
     lifoid_settings_module = environ_setting('LIFOID_SETTINGS_MODULE',
-                                             'agent.settings',
+                                             'bot.settings',
                                              required=False)
     server = ServerConfiguration()
+    mqtt = MQTTConfiguration()
 
     # Authentication
     dev_auth = environ_setting('DEV_AUTH', 'no', required=False)
 
     # Database backends
     templates = environ_setting('TEMPLATES', 'fs', required=False)
-    repository = environ_setting('REPOSITORY', 'dict', required=False)
     key = environ_setting('BACKEND_KEY', 'key', required=False)
     sort_key = environ_setting('BACKEND_SORT_KEY', 'date', required=False)
     context_prefix = environ_setting('CONTEXT_PREFIX',
@@ -149,7 +157,7 @@ class LifoidConfiguration(Configuration, LoggingMixin):
     bot_prefix = environ_setting('BOT_PREFIX',
                                  'lifoid-bot', required=False)
     # Processing mode
-    async = environ_setting('ASYNC', 'no', required=False)
+    pasync = environ_setting('ASYNC', 'no', required=False)
     timeout = int(environ_setting('TIMEOUT', 180, required=False))
 
     # Misc

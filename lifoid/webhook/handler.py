@@ -7,7 +7,7 @@ import datetime
 from multiprocessing import Process
 from six import add_metaclass
 from singleton import Singleton
-from loggingmixin import LoggingMixin
+from lifoid.logging.mixin import LoggingMixin
 from lifoid import Lifoid
 from lifoid.message.message_types import CHAT
 from lifoid.message import LifoidMessage, Chat
@@ -15,7 +15,7 @@ from lifoid.constants import E_POST
 from lifoid.webhook.renderer import Renderer
 from lifoid.exceptions import LifoidRequestForbiddenError
 from lifoid.auth import get_user
-from loggingmixin import ServiceLogger
+from lifoid.logging.mixin import ServiceLogger
 logger = ServiceLogger()
 
 
@@ -60,7 +60,7 @@ class Handler(LoggingMixin):
             event['date'] = datetime.datetime.utcnow().isoformat()[:-3]
             if asynchronous:
                 try:
-                    from zappa.async import run
+                    from zappa.asynchronous import run
                     run(process_event, args=(event,))
                 except ModuleNotFoundError:
                     p_reply = Process(target=process_event,

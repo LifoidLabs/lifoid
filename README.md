@@ -147,11 +147,13 @@ NLU_URL=http://127.0.0.1:5000
 **CLI**
 
 **mqtt** Launches a Lifoid mqtt bot instance
+
 ```bash
 lifoid mqtt --host localhost --port 1883 --lifoid_id simple-bot
 ```
 
 **run** Launches a Lifoid server instance with configured webhooks
+
 ```bash
 $ lifoid run --host localhost --port 5000
 ```
@@ -248,16 +250,41 @@ or with setuptools
 $ python setup.py test
 ```
 
-## Getting help
+## Docker
 
-To get help with Lifoid, please contact Romary on romary@me.com
+Build lifoid docker image
+```bash
+docker build -t lifoid .
+```
 
+Use this image in a docker-compose.yml file. Here is an example for MQTT
+with a mosquitto service:
 
----
+```yaml
+version: '3.4'
 
-*Author:*   Romary Dupuis <romary@me.com>
+services:
+  mosquitto:
+    image: eclipse-mosquitto
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+  lifoid:
+    image: lifoid
+    command: lifoid mqtt_bot --host mosquitto
+    depends_on:
+      - mosquitto
+    volumes:
+      - ./bot:/app/bot
+    environment:
+      LIFOID_SETTINGS_MODULE: bot.settings
+      LOGGING_SERVICE: lifoid
+      LOGGING_DEBUG: "no"
+      LOGGING_HANDLERS: console,logfile,rotatedlogfile,debug
+      LOGGING_FILE: lifoid.log
+      LOGGING_ROTATED_FILE_INTERVAL: H
+```
 
-*Copyright (C) 2017-2018 Romary Dupuis*
-
-
-
+```bash
+docker-compose up
+```

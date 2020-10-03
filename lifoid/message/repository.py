@@ -3,8 +3,7 @@ webhook handler
 Author:   Romary Dupuis <romary@me.com>
 Copyright (C) 2017-2018 Romary Dupuis
 """
-from jsonrepo.repository import Repository
-from lifoid.config import settings
+from lifoid.data.repository import Repository
 from lifoid.message import Message
 
 

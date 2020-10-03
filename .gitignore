@@ -50,6 +50,13 @@ lifoid.egg*
 # Others #
 #########
 .env
+.python-version
+.coverage
 .Python
 /conf/lifoid.yaml
 /.cache/*
+/.vscode/*
+/dev
+LOG
+DEBUG
+ROTATED_LOG*

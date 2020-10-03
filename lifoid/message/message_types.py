@@ -4,6 +4,7 @@
 #
 # Copyright (C) 2017-2018 Romary Dupuis
 
+TXT = 'txt'
 CHAT = 'chat'
 M2M = 'm2m'
 UNKNOWN = 'unknown'

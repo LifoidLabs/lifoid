@@ -18,13 +18,15 @@ from jinja2 import (Environment, TemplateNotFound, Template,
                     PackageLoader, FileSystemLoader)
 from flask_babel import gettext as flask_gettext
 from flask import render_template as flask_render_template
-from jsonrepo.repository import Repository
-from jsonrepo.record import DictRecord
+from lifoid.data.repository import Repository
+from lifoid.data.record import DictRecord
 from lifoid.config import settings
+from lifoid.plugin import plugator
+import lifoid.signals as signals
 from lifoid.message import (LifoidMessage, Attachment, ButtonAction, Option,
                             Table, MenuAction, Chat, Edit)
 from lifoid.message.message_types import CHAT
-from loggingmixin import ServiceLogger
+from lifoid.logging.mixin import ServiceLogger
 logger = ServiceLogger()
 
 MSG_SPLIT = '1234567890ab'
@@ -92,7 +94,9 @@ def get_template(lifoid_id, name, lang):
     template_key = '{}:{}:{}'.format(lifoid_id, name, lang)
     logger.debug('Get template {}'.format(template_key))
     template = TemplateRepository(
-        settings.repository,
+        plugator.get_plugin(
+            signals.get_backend
+        ),
         settings.template_prefix).latest(template_key)
     if template is None:
         logger.error('Get template {}'.format(template_key))
@@ -128,7 +132,7 @@ def get_yaml_view(template_name, **kwargs):
         rendered_template = render_template(template_name, **kwargs)
         if rendered_template is None:
             return None
-        content = yaml.load(rendered_template)
+        content = yaml.load(rendered_template, Loader=yaml.FullLoader)
         if 'message_type' in content and content['message_type'] == CHAT:
             payload = content['payload']
             attachments = []

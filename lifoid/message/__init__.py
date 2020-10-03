@@ -1,9 +1,9 @@
 import datetime
 import time
 from collections import namedtuple
-from jsonrepo.record import NamedtupleRecord
-from loggingmixin import LoggingMixin
-from lifoid.message.message_types import CHAT
+from lifoid.data.record import NamedtupleRecord
+from lifoid.logging.mixin import LoggingMixin
+from lifoid.message.message_types import CHAT, TXT
 
 _fields = ['date', 'ttl', 'from_user', 'to_user', 'payload',
            'message_type', 'lifoid_id', 'topic', 'type']
@@ -24,9 +24,11 @@ class Message(namedtuple('Message', _fields), NamedtupleRecord, LoggingMixin):
         # backward compatibility
         if 'type' in kwargs.keys() and 'message_type' not in kwargs.keys():
             default['message_type'] = default['type']
-        if (isinstance(default['payload'], dict) and
+        if (isinstance(default['payload'], dict) and \
             default['message_type'] == CHAT):
             default['payload'] = Chat(**default['payload'])
+        if default['message_type'] == TXT:
+            default['payload'] = default['payload']
         return super(Message, cls).__new__(
             cls, **default)
 

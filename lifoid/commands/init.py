@@ -18,7 +18,7 @@ ACTIONS_MODULE = 'actions.py'
 ACTIONS_TEMPLATE = 'actions_template.py'
 ROUTER_MODULE = 'router.py'
 ROUTER_TEMPLATE = 'router_template.py'
-PROJECT_NAME = 'agent'
+PROJECT_NAME = 'bot'
 
 
 class InitCommand(Command):
@@ -34,6 +34,10 @@ class InitCommand(Command):
         print(color.format('create .env', color.CYAN))
         h = open(os.path.join(path, '.env'), 'w')
         h.write('LIFOID_SETTINGS_MODULE={}.settings'.format(name))
+        h.write('LOGGING_LEVEL=INFO')
+        h.write('LOGGING_SERVICE=lifoid')
+        h.write('LOGGING_HANDLERS=console')
+        h.write('LOGGING_DEBUG=no')
         h.close()
 
     def make_project_dir(self, path):

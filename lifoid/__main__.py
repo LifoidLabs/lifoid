@@ -10,34 +10,35 @@
 Definition of the lifoid app and commands
 """
 from importlib import import_module
-import logging
 from commis import color
 from commis import ConsoleProgram
 from lifoid.commands.run import RunCommand
-from lifoid.commands.chat import ChatCommand
 from lifoid.commands.init import InitCommand
 from lifoid.commands.test import TestCommand
 from lifoid.commands.load_static import LoadstaticCommand
 from lifoid.commands.cli import CliCommand
-from lifoid.commands.load_template import LoadTemplatesCommand
-from lifoid.commands.mqtt import MQTTCommand
+from lifoid.commands.load_templates import LoadTemplatesCommand
+from lifoid.commands.mqtt_bot import MQTTBotCommand
+from lifoid.commands.mqtt_client import MQTTClientCommand
 from lifoid.config import settings
 from lifoid.signals import get_command
 from lifoid.plugin import Plugator
 
-log = logging.getLogger(__name__)
-
 DESCRIPTION = "Management and administration commands for lifoid"
-EPILOG = "If there are any bugs or concerns, submit an issue on Github: https://www.github.com/romaryd/lifoid.git"
+EPILOG = \
+"""
+If there are any bugs or concerns, submit an issue on Github:
+https://www.github.com/LifoidLabs/lifoid.git
+"""
 COMMANDS = [
     InitCommand,
     CliCommand,
     TestCommand,
     RunCommand,
-    ChatCommand,
     LoadstaticCommand,
     LoadTemplatesCommand,
-    MQTTCommand
+    MQTTBotCommand,
+    MQTTClientCommand
 ]
 
 

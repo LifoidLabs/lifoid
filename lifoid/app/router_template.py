@@ -1,4 +1,4 @@
-from agent.actions import hello, name, unknown
+from bot.actions import hello, name, unknown
 from lifoid.bot import Bot
 
 actions = [
