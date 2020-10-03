@@ -17,8 +17,6 @@ class Repository(StorageMixin, LoggingMixin):
     Definition of a repository
     """
     klass = Record
-    key = 'key'
-    sort_key = 'date'
     secondary_indexes = []
 
     def __init__(self, backend, prefix):
@@ -28,7 +26,7 @@ class Repository(StorageMixin, LoggingMixin):
     def storage_get(self, key, sort_key):
         return self.storage.get(key, sort_key)
 
-    def get(self, key, sort_key, klass=None, **args):
+    def get(self, key, sort_key, **args):
         """
         Retrieves a context object
         """
@@ -58,11 +56,14 @@ class Repository(StorageMixin, LoggingMixin):
         return [self.klass.from_json(_object)
                 for _object in self.storage.history(key, _from, _to, _desc)]
 
-    def latest(self, key):
+    def latest(self, key, **args):
         """
         Get the most recent record for a specific key
         """
-        return self.klass.from_json(self.storage.latest(key))
+        record = self.storage.latest(key)
+        if record is None:
+            return self.klass(**args)
+        return self.klass.from_json(record)
 
     def find(self, index, value):
         """

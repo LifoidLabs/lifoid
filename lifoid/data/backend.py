@@ -30,3 +30,6 @@ class Backend(object):
 
     def find(self, index, value):
         raise NotImplementedError
+    
+    def latest(self, key):
+        raise NotImplementedError

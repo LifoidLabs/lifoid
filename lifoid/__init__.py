@@ -101,13 +101,14 @@ class Lifoid(LoggingMixin):
 
     @memoized
     def context_rep(self):
+        BotRepository.klass = self.bot_model
         return BotRepository(self.backend,
                              settings.context_prefix)
 
     @memoized
     def message_rep(self):
-        return BotRepository(self.backend,
-                             settings.message_prefix)
+        return MessageRepository(self.backend,
+                                 settings.message_prefix)
 
     @memoized
     def parser(self):
@@ -137,10 +138,8 @@ class Lifoid(LoggingMixin):
         """
         if context_id is None:
             context_id = reply_id
-        self.context = self.context_rep.get(
+        self.context = self.context_rep.latest(
             '{}:{}'.format(self.lifoid_id, context_id),
-            None,
-            klass=self.bot_model,
             lifoid_id=self.lifoid_id
         )
 
@@ -205,6 +204,7 @@ class Lifoid(LoggingMixin):
                 output = action(render, message, self.context)
                 self.context_rep.save(
                     '{}:{}'.format(self.lifoid_id, context_id),
-                    None, self.context)
+                    message.date,
+                    self.context)
                 return output
         self.logger.warning('No action matched. Define fallback action.')
